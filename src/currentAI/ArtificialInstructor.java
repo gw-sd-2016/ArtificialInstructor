@@ -66,7 +66,7 @@ import be.tarsos.dsp.pitch.PitchDetectionHandler;
 import be.tarsos.dsp.pitch.PitchDetectionResult;
 import be.tarsos.dsp.pitch.PitchProcessor;
 import be.tarsos.dsp.pitch.PitchProcessor.PitchEstimationAlgorithm;
-import currentAI.playBackThread;
+
 
 /*
  * Additional Imports required
@@ -88,6 +88,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import currentAI.PlayBackThread;
+import currentAI.OscilloscopePanel;
+
+
 
 /*
  *  ArtificalInstructor currently:
@@ -109,7 +113,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 	private boolean startRecording = false;
 	
 	//variables for GUI
-	private final GaphPanel panel;
+	private final OscilloscopePanel panel;
 	private final JPanel jP;
 	private final JScrollPane sp;
 	private JButton start;
@@ -169,7 +173,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 		}
 		
 		//initialize panel
-		panel = new GaphPanel();
+		panel = new OscilloscopePanel();
 		
 		//initialize textarea and scrollpane
 		textArea1 = new JTextArea();
@@ -266,7 +270,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                     sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo1);
                     sourceDataLine.open(playBackFormat, 1024);
  
-                    Runnable threadJob = new playBackThread(sourceDataLine, ais);
+                    Runnable threadJob = new PlayBackThread(sourceDataLine, ais);
                 	Thread t1 = new Thread(threadJob);
                 	
                 	t1.start();
@@ -323,40 +327,6 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 		
 	}//end performTasks
 	
-
-	//Taken from TarsoDSP oscilloscopeExample program, no changes were made
-	private static class GaphPanel extends JPanel{
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 4969781241442094359L;
-		
-		float data[];
-		
-		public GaphPanel(){
-			setMinimumSize(new Dimension(80,60)); 
-		}
-		
-		public void paintComponent(Graphics g) {
-	        super.paintComponent(g); //paint background
-	        g.setColor(Color.BLACK);
-			g.fillRect(0, 0,getWidth(), getHeight());
-			g.setColor(Color.WHITE);
-			if(data != null){
-				float width = getWidth();
-				float height = getHeight();
-				float halfHeight = height / 2;
-				for(int i=0; i < data.length ; i+=4){
-					 g.drawLine((int)(data[i]* width),(int)( halfHeight - data[i+1]* height),(int)( data[i+2]*width),(int)( halfHeight - data[i+3]*height));
-				}
-			}
-	    }
-		
-		public void paint(float[] data, AudioEvent event){
-			this.data = data;
-		}
-	}
 	
 	//Main method taken from TarsoDSP pitchDetectionExample program and modified to fit my program
 	public static void main(String... strings) throws InterruptedException,
@@ -433,51 +403,51 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 			
 			if(pitch >= 0 && pitch <= 16.835)
 			{
-				note = "C0";
+				note = "C";
 			}
 			else if(pitch >= 16.836 && pitch <= 17.835)
 			{
-				note = "C#0";
+				note = "C#";
 			}
 			else if(pitch >= 17.836 && pitch <= 18.9)
 			{
-				note = "D0";
+				note = "D";
 			}
 			else if(pitch >= 18.91 && pitch <= 20.025)
 			{
-				note = "Eb0";
+				note = "Eb";
 			}
 			else if(pitch >= 20.026 && pitch <= 21.215)
 			{
-				note = "E0";
+				note = "E";
 			}
 			else if(pitch >= 21.216 && pitch <= 22.475)
 			{
-				note = "F0";
+				note = "F";
 			}
 			else if(pitch >= 22.476 && pitch <= 23.81)
 			{
-				note = "F#0";
+				note = "F#";
 			}
 			else if(pitch >= 23.82 && pitch <= 25.23)
 			{
-				note = "G0";
+				note = "G";
 			}
 			else if(pitch >= 25.24 && pitch <= 26.73)
 			{
-				note = "G#0";
+				note = "G#";
 			}
 			else if(pitch >= 26.74 && pitch <= 28.32)
 			{
-				note = "A0";
+				note = "A";
 			}
 			else if(pitch >= 28.33 && pitch <= 30.005)
 			{
-				note = "Bb0";
+				note = "Bb";
 			}
 			else if(pitch >= 30.006 && pitch <= 31.785)
 			{
-				note = "B0";
+				note = "B";
 			}//end inner-conditionals
 		}	
 		//Octave 1
@@ -485,102 +455,102 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 		{
 			if(pitch >= 31.786 && pitch <= 33.675)
 			{
-				note = "C1";
+				note = "C";
 			}
 			else if(pitch >= 33.676 && pitch <= 35.68)
 			{
-				note = "C#1";
+				note = "C#";
 			}
 			else if(pitch >= 35.69 && pitch <= 37.8)
 			{
-				note = "D1";
+				note = "D";
 			}
 			else if(pitch >= 37.9 && pitch <= 40.045)
 			{
-				note = "Eb1";
+				note = "Eb";
 			}
 			else if(pitch >= 40.046 && pitch <= 42.425)
 			{
-				note = "E1";
+				note = "E";
 			}
 			else if(pitch >= 42.426 && pitch <= 44.95)
 			{
-				note = "F1";
+				note = "F";
 			}
 			else if(pitch >= 44.96 && pitch <= 47.625)
 			{
-				note = "F#1";
+				note = "F#";
 			}
 			else if(pitch >= 47.626 && pitch <= 50.455)
 			{
-				note = "G1";
+				note = "G";
 			}
 			else if(pitch >= 50.456 && pitch <= 53.455)
 			{
-				note = "G#1";
+				note = "G#";
 			}
 			else if(pitch >= 53.456 && pitch <= 56.635)
 			{
-				note = "A1";
+				note = "A";
 			}
 			else if(pitch >= 56.636 && pitch <= 60.005)
 			{
-				note = "Bb1";
+				note = "Bb";
 			}
 			else if(pitch >= 60.006 && pitch <= 63.575)
 			{
-				note = "B1";
+				note = "B";
 			}//end inner-conditionals
 		}
 		//Octave 2
 		else if(pitch >= 63.576 && pitch <= 127.15){
 			if(pitch >= 63.576 && pitch <= 67.355)
 			{
-				note = "C2";
+				note = "C";
 			}
 			else if(pitch >= 67.356 && pitch <= 71.36)
 			{
-				note = "C#2";
+				note = "C#";
 			}
 			else if(pitch >= 71.37 && pitch <= 75.6)
 			{
-				note = "D2";
+				note = "D";
 			}
 			else if(pitch >= 75.7 && pitch <= 80.095)
 			{
-				note = "Eb2";
+				note = "Eb";
 			}
 			else if(pitch >= 80.096 && pitch <= 84.86)
 			{
-				note = "E2";
+				note = "E";
 			}
 			else if(pitch >= 84.87 && pitch <= 89.905)
 			{
-				note = "F2";
+				note = "F";
 			}
 			else if(pitch >= 89.906 && pitch <= 95.25)
 			{
-				note = "F#2";
+				note = "F#";
 			}
 			else if(pitch >= 96.26 && pitch <= 100.9)
 			{
-				note = "G2";
+				note = "G";
 			}
 			else if(pitch >= 101 && pitch <= 106.9)
 			{
-				note = "G#2";
+				note = "G#";
 			}
 			else if(pitch >= 107 && pitch <= 113.25)
 			{
-				note = "A2";
+				note = "A";
 			}
 			else if(pitch >= 113.26 && pitch <= 120)
 			{
-				note = "Bb2";
+				note = "Bb";
 			}
 			else if(pitch >= 120.5 && pitch <= 127.15)
 			{
-				note = "B2";
+				note = "B";
 			}//end inner-conditionals
 			
 		}
@@ -588,51 +558,51 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 		else if(pitch >= 127.16 && pitch <= 254.25){
 			if(pitch >= 127.16 && pitch <= 134.7)
 			{
-				note = "C3";
+				note = "C";
 			}
 			else if(pitch >= 134.8 && pitch <= 142.7)
 			{
-				note = "C#3";
+				note = "C#";
 			}
 			else if(pitch >= 142.8 && pitch <= 151.2)
 			{
-				note = "D3";
+				note = "D";
 			}
 			else if(pitch >= 151.3 && pitch <= 160.2)
 			{
-				note = "Eb3";
+				note = "Eb";
 			}
 			else if(pitch >= 160.3 && pitch <= 169.7)
 			{
-				note = "E3";
+				note = "E";
 			}
 			else if(pitch >= 169.8 && pitch <= 179.8)
 			{
-				note = "F3";
+				note = "F";
 			}
 			else if(pitch >= 179.9 && pitch <= 190.5)
 			{
-				note = "F#3";
+				note = "F#";
 			}
 			else if(pitch >= 190.6 && pitch <= 201.85)
 			{
-				note = "G3";
+				note = "G";
 			}
 			else if(pitch >= 201.86 && pitch <= 213.85)
 			{
-				note = "G#3";
+				note = "G#";
 			}
 			else if(pitch >= 213.86 && pitch <= 226.55)
 			{
-				note = "A3";
+				note = "A";
 			}
 			else if(pitch >= 226.56 && pitch <= 240)
 			{
-				note = "Bb3";
+				note = "Bb";
 			}
 			else if(pitch >= 240.1 && pitch <= 254.25)
 			{
-				note = "B3";
+				note = "B";
 				
 			}//end inner-conditionals
 		}
@@ -640,51 +610,51 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 		else if(pitch >= 254.26 && pitch <= 508.6){
 			if(pitch >= 254.25 && pitch <= 269.4)
 			{
-				note = "C4";
+				note = "C";
 			}
 			else if(pitch >= 269.5 && pitch <= 285.45)
 			{
-				note = "C#4";
+				note = "C#";
 			}
 			else if(pitch >= 285.46 && pitch <= 302.4)
 			{
-				note = "D4";
+				note = "D";
 			}
 			else if(pitch >= 302.5 && pitch <= 320.35)
 			{
-				note = "Eb4";
+				note = "Eb";
 			}
 			else if(pitch >= 320.36 && pitch <= 339.4)
 			{
-				note = "E4";
+				note = "E";
 			}
 			else if(pitch >= 339.5 && pitch <= 359.6)
 			{
-				note = "F4";
+				note = "F";
 			}
 			else if(pitch >= 359.7 && pitch <= 381)
 			{
-				note = "F#4";
+				note = "F#";
 			}
 			else if(pitch >= 381.1 && pitch <= 403.65)
 			{
-				note = "G4";
+				note = "G";
 			}
 			else if(pitch >= 403.66 && pitch <= 427.65)
 			{
-				note = "G#4";
+				note = "G#";
 			}
 			else if(pitch >= 427.66 && pitch <= 453.1)
 			{
-				note = "A4";
+				note = "A";
 			}
 			else if(pitch >= 453.2 && pitch <= 480.05)
 			{
-				note = "Bb4";
+				note = "Bb";
 			}
 			else if(pitch >= 480.06 && pitch <= 508.6)
 			{
-				note = "B4";
+				note = "B";
 				
 			}//end inner-conditionals
 			

@@ -8,11 +8,11 @@ import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.SourceDataLine;
 
-public class playBackThread implements Runnable {
+public class PlayBackThread implements Runnable {
 	private SourceDataLine sdl;
 	private AudioInputStream aIStream;
 	
-	public playBackThread(SourceDataLine sourceDL, AudioInputStream audIS) throws IOException{
+	public PlayBackThread(SourceDataLine sourceDL, AudioInputStream audIS) throws IOException{
 		sdl = sourceDL;
 		aIStream = audIS;
 	}
