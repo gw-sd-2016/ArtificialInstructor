@@ -74,6 +74,7 @@ import be.tarsos.dsp.pitch.PitchProcessor.PitchEstimationAlgorithm;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -113,14 +114,20 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 	private boolean startRecording = false;
 	
 	//variables for GUI
-	private final OscilloscopePanel panel;
-	private final JPanel jP;
+	private final OscilloscopePanel oPanel;
+	private final JPanel jP, tunerPanel;
 	private final JScrollPane sp;
 	private JButton start;
 	private JButton stop;
 	private JTextArea textArea1;
 	private boolean userPrompt = false; 
-	
+	private boolean tunerP = false;
+	private boolean backP = false;
+	private JButton tuner;
+	private JButton back;
+	private JTextArea tunerTextArea;
+	public static JFrame frame;
+	private boolean newNote = false;
 	
 	//*************BEING ACTION LISTENERS*****************//
 	//Actionlistener for START button
@@ -149,6 +156,28 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 			}
 		}
 	};
+	
+	private ActionListener tunerPressed = new ActionListener(){
+		@Override
+		public void actionPerformed(final ActionEvent e){
+			frame.add(tunerPanel);
+			frame.remove(jP);
+			frame.remove(oPanel);
+			frame.repaint();
+			tunerP = true;
+		}
+	};
+	
+	private ActionListener backPressed = new ActionListener(){
+		@Override
+		public void actionPerformed(final ActionEvent e){
+			frame.remove(tunerPanel);
+			frame.add(jP);
+			frame.add(oPanel);
+			frame.repaint();
+			tunerP = false;
+		}
+	};
 	//*************END ACTION LISTENERS*****************//
 	
 	
@@ -173,11 +202,14 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 		}
 		
 		//initialize panel
-		panel = new OscilloscopePanel();
+		oPanel = new OscilloscopePanel();
 		
 		//initialize textarea and scrollpane
 		textArea1 = new JTextArea();
 		textArea1.setEditable(false);
+		Font font1 = textArea1.getFont();
+		float fSize = font1.getSize()+10.0f;
+		textArea1.setFont(font1.deriveFont(fSize));
 		sp = new JScrollPane(textArea1);
 		
 		//create a panel for the start and stop buttons to go in
@@ -188,26 +220,49 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 		//create start button and assign the actionlistener
 		start = new JButton("Start");
 		start.addActionListener(startRec);
-		start.setPreferredSize(new Dimension(400, 100));
+		start.setPreferredSize(new Dimension(250, 100));
 		start.setBackground(Color.green);
 		buttonsPanel.add(start);
 		
 		//create a stop button and assign the actionlistener
 		stop = new JButton("Stop");
 		stop.addActionListener(stopRec);
-		stop.setPreferredSize(new Dimension(400,100));
+		stop.setPreferredSize(new Dimension(250,100));
 		stop.setBackground(Color.red);
 		buttonsPanel.add(stop);
 		
+		tuner = new JButton("Start Tuner");
+		tuner.addActionListener(tunerPressed);
+		tuner.setPreferredSize(new Dimension(250,100));
+		buttonsPanel.add(tuner);
+		
 		//initialize the components to go in, and add components
 		jP = new JPanel();
-		jP.setVisible(true);
 		jP.setLayout(new BorderLayout());
 		jP.add(sp, BorderLayout.CENTER);
 		jP.add(buttonsPanel, BorderLayout.PAGE_END);
+		jP.setVisible(true);
+		
+		//Tuner panel creation and additions
+		tunerPanel = new JPanel();
+		tunerPanel.setLayout(new BorderLayout());
+		tunerTextArea = new JTextArea();
+		Font fontTuner = tunerTextArea.getFont();
+		tunerTextArea.setDisabledTextColor(Color.RED);
+		float fTunerSize = fontTuner.getSize()+200.0f;
+		tunerTextArea.setFont(font1.deriveFont(fTunerSize));
+		tunerTextArea.setVisible(true);
+		
+		back = new JButton("Leave Tuner");
+		back.addActionListener(backPressed);
+		buttonsPanel.add(back);
+		
+		tunerPanel.add(tunerTextArea, BorderLayout.CENTER);
+		tunerPanel.add(back, BorderLayout.PAGE_END);
+		tunerPanel.setVisible(true);
 		
 		//add the graph(panel) and output(buttons and textarea) to frame
-		this.add(panel);
+		this.add(oPanel);
 		this.add(jP);
 		
 	}
@@ -218,7 +273,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 	 * 	Uses a different format than analysis in order to output the correct sound
 	 */
 	public void playBack(){
-    	AudioFormat playBackFormat = new AudioFormat(1024, 16, 2, true, true);
+    	AudioFormat playBackFormat = new AudioFormat(1024, 16, 1, true, true);
         ByteArrayOutputStream out;				//input
     	int numBytesRead;						//input
     	int bytesRead;							//input
@@ -292,6 +347,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 		Mixer.Info [] availMixers = AudioSystem.getMixerInfo();
 		Mixer mixer = AudioSystem.getMixer(availMixers[1]);
 		
+		
 		if(dispatcher!= null){
 			dispatcher.stop();
 		}
@@ -302,7 +358,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 		int bufferSize = 1024;
 		int overlap = 0;
 		
-		AudioFormat format = new AudioFormat(sampleRate, 16, 2, true, true);
+		AudioFormat format = new AudioFormat(sampleRate, 16, 1, true, true);
 		//final AudioFormat format = new AudioFormat(8000.0f, 16, 1, true, true);
 		
 		final DataLine.Info dataLineInfo = new DataLine.Info(TargetDataLine.class, format);
@@ -311,7 +367,10 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 		final int numberOfSamples = bufferSize;
 		
 		
-		line.open(format, numberOfSamples);
+	//CHANGED LINE.OPEN -- FIX IF DOESNT WORK FOR TESTING WITH BASS
+		//line.open(format, numberOfSamples);
+		line.open(format, (int)sampleRate);
+		
 		line.start();
 		AudioInputStream stream = new AudioInputStream(line);
 		JVMAudioInputStream audioStream = new JVMAudioInputStream(stream);
@@ -337,7 +396,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 			@Override
 			public void run() {
 			
-				JFrame frame = new ArtificialInstructor();
+				frame = new ArtificialInstructor();
 				frame.pack();
 				frame.setSize(1000,800);
 				
@@ -350,21 +409,34 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 	//Modified from TarsoDSP pitchDetectionExample from TarsoDSP example by adding conditionals and output msg
 	@Override
 	public void handlePitch(PitchDetectionResult pitchDetectionResult,AudioEvent audioEvent) {
-		if(pitchDetectionResult.getPitch() != -1){
-			float pitch = pitchDetectionResult.getPitch();
+		if(pitchDetectionResult.getPitch() != -1 ){
 			
+			float pitch = pitchDetectionResult.getPitch();
 			String note = getNoteValue(pitch, 0);
 			
-			if(startRecording == true){
-				textArea1.append("Note: "+ note + ", pitch: " + pitch + ")\n");
-				textArea1.setCaretPosition(textArea1.getDocument().getLength());
-				
-			}else{
-				if(userPrompt == false){
-					textArea1.append("RECORDING NOT IN PROGRESSS, PRESS START BUTTON\n");
-					userPrompt = true;
+			if(tunerP == false){
+				if(newNote == false){
+					if(startRecording == true){
+						textArea1.append("Note: "+ note + ", pitch: " + pitch + ")\n");
+						textArea1.setCaretPosition(textArea1.getDocument().getLength());
+					}else{
+						if(userPrompt == false){
+							textArea1.append("RECORDING NOT IN PROGRESSS, PRESS START BUTTON\n");
+							userPrompt = true;
+						}
+					}
+				}else{
+					newNote = true;
 				}
 			}
+			else if(tunerP == true){
+				if(note != "couldnt be found"){
+					tunerTextArea.setText("");
+					tunerTextArea.append(note);
+				}
+			}
+		}else{
+			newNote = false;
 		}
 	}
 	
@@ -372,8 +444,8 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 	@Override
 	public void handleEvent(float[] data, AudioEvent event) {
 		if(startRecording == true){
-			panel.paint(data,event);
-			panel.repaint();
+			oPanel.paint(data,event);
+			oPanel.repaint();
 			
 			new Thread(new Runnable(){
 				@Override
@@ -390,7 +462,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 	 */
 	public String getNoteValue(float inputPitch, float offsetTuning){
 		
-		String note = "";
+		String note = null;
 		float pitch = inputPitch + offsetTuning;	//offsetTuning set during tuning process to allow for proper pitch detection. 
 		
 		/*
@@ -400,7 +472,6 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 		 */
 		//Octave 0
 		if(pitch >= 0 && pitch <= 31.785){
-			
 			if(pitch >= 0 && pitch <= 16.835)
 			{
 				note = "C";
@@ -409,11 +480,11 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 			{
 				note = "C#";
 			}
-			else if(pitch >= 17.836 && pitch <= 18.9)
+			else if(pitch >= 17.836 && pitch <= 18.900)
 			{
 				note = "D";
 			}
-			else if(pitch >= 18.91 && pitch <= 20.025)
+			else if(pitch >= 18.901 && pitch <= 20.025)
 			{
 				note = "Eb";
 			}
@@ -425,23 +496,23 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 			{
 				note = "F";
 			}
-			else if(pitch >= 22.476 && pitch <= 23.81)
+			else if(pitch >= 22.476 && pitch <= 23.810)
 			{
 				note = "F#";
 			}
-			else if(pitch >= 23.82 && pitch <= 25.23)
+			else if(pitch >= 23.811 && pitch <= 25.230)
 			{
 				note = "G";
 			}
-			else if(pitch >= 25.24 && pitch <= 26.73)
+			else if(pitch >= 25.231 && pitch <= 26.730)
 			{
 				note = "G#";
 			}
-			else if(pitch >= 26.74 && pitch <= 28.32)
+			else if(pitch >= 26.731 && pitch <= 28.320)
 			{
 				note = "A";
 			}
-			else if(pitch >= 28.33 && pitch <= 30.005)
+			else if(pitch >= 28.321 && pitch <= 30.005)
 			{
 				note = "Bb";
 			}
@@ -457,15 +528,15 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 			{
 				note = "C";
 			}
-			else if(pitch >= 33.676 && pitch <= 35.68)
+			else if(pitch >= 33.676 && pitch <= 35.680)
 			{
 				note = "C#";
 			}
-			else if(pitch >= 35.69 && pitch <= 37.8)
+			else if(pitch >= 35.681 && pitch <= 37.800)
 			{
 				note = "D";
 			}
-			else if(pitch >= 37.9 && pitch <= 40.045)
+			else if(pitch >= 37.801 && pitch <= 40.045)
 			{
 				note = "Eb";
 			}
@@ -473,11 +544,11 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 			{
 				note = "E";
 			}
-			else if(pitch >= 42.426 && pitch <= 44.95)
+			else if(pitch >= 42.426 && pitch <= 44.950)
 			{
 				note = "F";
 			}
-			else if(pitch >= 44.96 && pitch <= 47.625)
+			else if(pitch >= 44.951 && pitch <= 47.625)
 			{
 				note = "F#";
 			}
@@ -503,156 +574,159 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 			}//end inner-conditionals
 		}
 		//Octave 2
-		else if(pitch >= 63.576 && pitch <= 127.15){
+		else if(pitch >= 63.576 && pitch <= 127.150)
+		{
 			if(pitch >= 63.576 && pitch <= 67.355)
 			{
 				note = "C";
 			}
-			else if(pitch >= 67.356 && pitch <= 71.36)
+			else if(pitch >= 67.356 && pitch <= 71.360)
 			{
 				note = "C#";
 			}
-			else if(pitch >= 71.37 && pitch <= 75.6)
+			else if(pitch >= 71.361 && pitch <= 75.600)
 			{
 				note = "D";
 			}
-			else if(pitch >= 75.7 && pitch <= 80.095)
+			else if(pitch >= 75.601 && pitch <= 80.095)
 			{
 				note = "Eb";
 			}
-			else if(pitch >= 80.096 && pitch <= 84.86)
+			else if(pitch >= 80.096 && pitch <= 84.860)
 			{
 				note = "E";
 			}
-			else if(pitch >= 84.87 && pitch <= 89.905)
+			else if(pitch >= 84.861 && pitch <= 89.905)
 			{
 				note = "F";
 			}
-			else if(pitch >= 89.906 && pitch <= 95.25)
+			else if(pitch >= 89.906 && pitch <= 95.250)
 			{
 				note = "F#";
 			}
-			else if(pitch >= 96.26 && pitch <= 100.9)
+			else if(pitch >= 96.251 && pitch <= 100.900)
 			{
 				note = "G";
 			}
-			else if(pitch >= 101 && pitch <= 106.9)
+			else if(pitch >= 100.901 && pitch <= 106.900)
 			{
 				note = "G#";
 			}
-			else if(pitch >= 107 && pitch <= 113.25)
+			else if(pitch >= 106.901 && pitch <= 113.250)
 			{
 				note = "A";
 			}
-			else if(pitch >= 113.26 && pitch <= 120)
+			else if(pitch >= 113.251 && pitch <= 120.000)
 			{
 				note = "Bb";
 			}
-			else if(pitch >= 120.5 && pitch <= 127.15)
+			else if(pitch >= 120.001 && pitch <= 127.150)
 			{
 				note = "B";
 			}//end inner-conditionals
 			
 		}
 		//Octave 3
-		else if(pitch >= 127.16 && pitch <= 254.25){
-			if(pitch >= 127.16 && pitch <= 134.7)
+		else if(pitch >= 127.151 && pitch <= 254.250)
+		{
+			if(pitch >= 127.151 && pitch <= 134.700)
 			{
 				note = "C";
 			}
-			else if(pitch >= 134.8 && pitch <= 142.7)
+			else if(pitch >= 134.701 && pitch <= 142.700)
 			{
 				note = "C#";
 			}
-			else if(pitch >= 142.8 && pitch <= 151.2)
+			else if(pitch >= 142.701 && pitch <= 151.200)
 			{
 				note = "D";
 			}
-			else if(pitch >= 151.3 && pitch <= 160.2)
+			else if(pitch >= 151.201 && pitch <= 160.200)
 			{
 				note = "Eb";
 			}
-			else if(pitch >= 160.3 && pitch <= 169.7)
+			else if(pitch >= 160.201 && pitch <= 169.700)
 			{
 				note = "E";
 			}
-			else if(pitch >= 169.8 && pitch <= 179.8)
+			else if(pitch >= 169.701 && pitch <= 179.800)
 			{
 				note = "F";
 			}
-			else if(pitch >= 179.9 && pitch <= 190.5)
+			else if(pitch >= 179.801 && pitch <= 190.500)
 			{
 				note = "F#";
 			}
-			else if(pitch >= 190.6 && pitch <= 201.85)
+			else if(pitch >= 190.501 && pitch <= 201.850)
 			{
 				note = "G";
 			}
-			else if(pitch >= 201.86 && pitch <= 213.85)
+			else if(pitch >= 201.851 && pitch <= 213.850)
 			{
 				note = "G#";
 			}
-			else if(pitch >= 213.86 && pitch <= 226.55)
+			else if(pitch >= 213.851 && pitch <= 226.550)
 			{
 				note = "A";
 			}
-			else if(pitch >= 226.56 && pitch <= 240)
+			else if(pitch >= 226.551 && pitch <= 240.000)
 			{
 				note = "Bb";
 			}
-			else if(pitch >= 240.1 && pitch <= 254.25)
+			else if(pitch >= 240.001 && pitch <= 254.250)
 			{
 				note = "B";
 				
 			}//end inner-conditionals
 		}
 		//Octave 4
-		else if(pitch >= 254.26 && pitch <= 508.6){
-			if(pitch >= 254.25 && pitch <= 269.4)
+		else if(pitch >= 254.251 && pitch <= 508.600)
+		{
+			if(pitch >= 254.251 && pitch <= 269.400)
 			{
 				note = "C";
 			}
-			else if(pitch >= 269.5 && pitch <= 285.45)
+			else if(pitch >= 269.401 && pitch <= 285.450)
 			{
 				note = "C#";
 			}
-			else if(pitch >= 285.46 && pitch <= 302.4)
+			else if(pitch >= 285.451 && pitch <= 302.400)
 			{
 				note = "D";
 			}
-			else if(pitch >= 302.5 && pitch <= 320.35)
+			else if(pitch >= 302.401 && pitch <= 320.350)
 			{
 				note = "Eb";
 			}
-			else if(pitch >= 320.36 && pitch <= 339.4)
+			else if(pitch >= 320.351 && pitch <= 339.400)
 			{
 				note = "E";
 			}
-			else if(pitch >= 339.5 && pitch <= 359.6)
+			else if(pitch >= 339.401 && pitch <= 359.600)
 			{
 				note = "F";
 			}
-			else if(pitch >= 359.7 && pitch <= 381)
+			else if(pitch >= 359.601 && pitch <= 381.000)
 			{
 				note = "F#";
 			}
-			else if(pitch >= 381.1 && pitch <= 403.65)
+			else if(pitch >= 381.001 && pitch <= 403.650)
 			{
 				note = "G";
 			}
-			else if(pitch >= 403.66 && pitch <= 427.65)
+			else if(pitch >= 403.651 && pitch <= 427.650)
 			{
 				note = "G#";
 			}
-			else if(pitch >= 427.66 && pitch <= 453.1)
+			else if(pitch >= 427.651 && pitch <= 453.100)
 			{
 				note = "A";
 			}
-			else if(pitch >= 453.2 && pitch <= 480.05)
+			else if(pitch >= 453.101 && pitch <= 480.050)
 			{
 				note = "Bb";
 			}
-			else if(pitch >= 480.06 && pitch <= 508.6)
+			else if(pitch >= 480.051 && pitch <= 508.600)
 			{
 				note = "B";
 				

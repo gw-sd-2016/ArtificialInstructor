@@ -6,17 +6,18 @@ public class Lesson {
 	String lessonTitle;
 	int lessonLvl;
 	int highScore;
-	float [] timeNotes;
+	double [] timeNotes;
 	String [] noteValues;
-
+	double [] notesFreq;
 	
-	public Lesson(int lessonNumber, String lessonName, int lvl, float [] timing, String [] notes){
+	public Lesson(int lessonNumber, String lessonName, int lvl, double [] timing, String [] notes, double[] noteF){
 		lessonNum = lessonNumber;
 		lessonTitle = lessonName;
 		lessonLvl = lvl;
 		timeNotes = timing;
 		noteValues = notes;
 		highScore = 0;
+		notesFreq = noteF;
 	}
 	
 	public void setLessonNumber(int lessonNumber){
@@ -51,11 +52,11 @@ public class Lesson {
 		return noteValues;
 	}
 	
-	public void setLessonTiming(float [] timing){
+	public void setLessonTiming(double [] timing){
 		timeNotes = timing;
 	}
 	
-	public float[] getLessonTiming(){
+	public double [] getLessonTiming(){
 		return timeNotes;
 	}
 	
@@ -67,4 +68,11 @@ public class Lesson {
 		return highScore;
 	}
 	
+	public void setNoteFrequencies(double [] noteF){
+		notesFreq = noteF;
+	}
+	
+	public double [] getNoteFrequencies(){
+		return notesFreq;
+	}
 }
