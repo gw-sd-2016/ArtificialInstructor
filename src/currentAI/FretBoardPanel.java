@@ -314,11 +314,568 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("G", D_LABELWIDTH5, D_LABELHEIGHT1);
                     g.drawString("G", D_LABELWIDTH0, D_LABELHEIGHT0);
                 }
+                else if (noteVal == "G#") {
+                    //add dot to mark notes
+                    g.setColor(Color.RED);
+                    g.fillOval(DOTWIDTH4, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+                    g.fillOval(DOTWIDTH11, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
+                    g.fillOval(DOTWIDTH6, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
+                    g.fillOval(DOTWIDTH1, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
+
+                    //add label to dot
+                    g.setColor(Color.BLACK);
+                    g.drawString("G#", D_LABELWIDTH4, D_LABELHEIGHT3);
+                    g.drawString("G#", D_LABELWIDTH11, D_LABELHEIGHT2);
+                    g.drawString("G#", D_LABELWIDTH6, D_LABELHEIGHT1);
+                    g.drawString("G#", D_LABELWIDTH1, D_LABELHEIGHT0);
+                }
 
             }
             else if(displayAllNotes == false)
             {
-            	
+            	if(currentOctave == 0)
+            	{
+                    if (noteVal == "A") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH5, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("A", D_LABELWIDTH5, D_LABELHEIGHT3);
+                        
+                    } else if (noteVal == "Bb") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH6, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("Bb", D_LABELWIDTH6, D_LABELHEIGHT3);
+                        
+                    } else if (noteVal == "B") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH7, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("B", D_LABELWIDTH7, D_LABELHEIGHT3);
+                        
+                    } else if (noteVal == "C") {
+                        //mark notes with dot
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH8, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("C", D_LABELWIDTH8, D_LABELHEIGHT3);
+
+                    } else if (noteVal == "C#") {
+                        //mark notes with dot
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH9, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("C#", D_LABELWIDTH9, D_LABELHEIGHT3);
+
+                    } else if (noteVal == "D") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH10, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //label dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("D", D_LABELWIDTH10, D_LABELHEIGHT3);
+
+                    } else if (noteVal == "Eb") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH11, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //label dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("Eb", D_LABELWIDTH11, D_LABELHEIGHT3);
+
+                    } else if (noteVal == "E") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH0, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("E", D_LABELWIDTH0, D_LABELHEIGHT3);
+                        
+                    } else if (noteVal == "F") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH1, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("F", D_LABELWIDTH1, D_LABELHEIGHT3);
+
+                    } else if (noteVal == "F#") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH2, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("F#", D_LABELWIDTH2, D_LABELHEIGHT3);
+
+                    } else if (noteVal == "G") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH3, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("G", D_LABELWIDTH3, D_LABELHEIGHT3);
+                    }
+                    else if (noteVal == "G#") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH4, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("G#", D_LABELWIDTH4, D_LABELHEIGHT3);
+                    }
+            	}
+            	else if(currentOctave == 1)
+            	{
+                    if (noteVal == "A") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH5, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("A", D_LABELWIDTH5, D_LABELHEIGHT3);
+                        
+                    } else if (noteVal == "Bb") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH6, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("Bb", D_LABELWIDTH6, D_LABELHEIGHT3);
+
+                    } else if (noteVal == "B") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH7, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("B", D_LABELWIDTH7, D_LABELHEIGHT3);
+                        
+                    } else if (noteVal == "C") {
+                        //mark notes with dot
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH8, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("C", D_LABELWIDTH8, D_LABELHEIGHT3);
+
+                    } else if (noteVal == "C#") {
+                        //mark notes with dot
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH9, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("C#", D_LABELWIDTH9, D_LABELHEIGHT3);
+
+                    } else if (noteVal == "D") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH10, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //label dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("D", D_LABELWIDTH10, D_LABELHEIGHT3);
+
+                    } else if (noteVal == "Eb") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH11, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //label dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("Eb", D_LABELWIDTH11, D_LABELHEIGHT3);
+
+                    } else if (noteVal == "E") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH0, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("E", D_LABELWIDTH0, D_LABELHEIGHT3);
+                        
+                    } else if (noteVal == "F") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH1, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("F", D_LABELWIDTH1, D_LABELHEIGHT3);
+
+                    } else if (noteVal == "F#") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH2, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("F#", D_LABELWIDTH2, D_LABELHEIGHT3);
+
+                    } else if (noteVal == "G") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH3, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("G", D_LABELWIDTH3, D_LABELHEIGHT3);
+                    }
+                    else if (noteVal == "G#") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH4, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("G#", D_LABELWIDTH4, D_LABELHEIGHT3);
+                    }
+            	}
+            	else if(currentOctave == 2)
+            	{
+                    if (noteVal == "A") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH0, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("A", D_LABELWIDTH0, D_LABELHEIGHT2);
+                    } else if (noteVal == "Bb") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH1, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("Bb", D_LABELWIDTH1, D_LABELHEIGHT2);
+                    } else if (noteVal == "B") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH2, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("B", D_LABELWIDTH2, D_LABELHEIGHT2);
+                    } else if (noteVal == "C") {
+                        //mark notes with dot
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH3, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("C", D_LABELWIDTH3, D_LABELHEIGHT2);
+
+                    } else if (noteVal == "C#") {
+                        //mark notes with dot
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH4, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("C#", D_LABELWIDTH4, D_LABELHEIGHT2);
+
+                    } else if (noteVal == "D") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH5, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
+
+                        //label dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("D", D_LABELWIDTH5, D_LABELHEIGHT2);
+
+                    } else if (noteVal == "Eb") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH6, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
+
+                        //label dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("Eb", D_LABELWIDTH6, D_LABELHEIGHT2);
+
+                    } else if (noteVal == "E") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH7, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("E", D_LABELWIDTH7, D_LABELHEIGHT2);
+                    } else if (noteVal == "F") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH8, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("F", D_LABELWIDTH8, D_LABELHEIGHT2);
+
+                    } else if (noteVal == "F#") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH9, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("F#", D_LABELWIDTH9, D_LABELHEIGHT2);
+
+                    } else if (noteVal == "G") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH10, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("G", D_LABELWIDTH10, D_LABELHEIGHT2);
+                    }
+                    else if (noteVal == "G#") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH11, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("G#", D_LABELWIDTH11, D_LABELHEIGHT2);
+                    }
+            	}
+            	else if(currentOctave == 3)
+            	{
+                    if (noteVal == "A") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH7, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("A", D_LABELWIDTH7, D_LABELHEIGHT1);
+                    } else if (noteVal == "Bb") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH8, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("Bb", D_LABELWIDTH8, D_LABELHEIGHT1);
+                    } else if (noteVal == "B") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH9, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("B", D_LABELWIDTH9, D_LABELHEIGHT1);
+                    } else if (noteVal == "C") {
+                        //mark notes with dot
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH10, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("C", D_LABELWIDTH10, D_LABELHEIGHT1);
+
+                    } else if (noteVal == "C#") {
+                        //mark notes with dot
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH11, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("C#", D_LABELWIDTH11, D_LABELHEIGHT1);
+
+                    } else if (noteVal == "D") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH0, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
+
+                        //label dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("D", D_LABELWIDTH0, D_LABELHEIGHT1);
+
+                    } else if (noteVal == "Eb") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH1, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
+
+                        //label dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("Eb", D_LABELWIDTH1, D_LABELHEIGHT1);
+
+                    } else if (noteVal == "E") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH2, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("E", D_LABELWIDTH2, D_LABELHEIGHT1);
+                    } else if (noteVal == "F") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH3, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("F", D_LABELWIDTH3, D_LABELHEIGHT1);
+
+                    } else if (noteVal == "F#") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH4, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("F#", D_LABELWIDTH4, D_LABELHEIGHT1);
+
+                    } else if (noteVal == "G") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH5, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("G", D_LABELWIDTH5, D_LABELHEIGHT1);
+                    }
+                    else if (noteVal == "G#") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH6, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("G#", D_LABELWIDTH6, D_LABELHEIGHT1);
+                    }
+            	}
+            	else if(currentOctave == 4)
+            	{
+                    if (noteVal == "A") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH2, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("A", D_LABELWIDTH2, D_LABELHEIGHT0);
+                    } else if (noteVal == "Bb") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH3, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("Bb", D_LABELWIDTH3, D_LABELHEIGHT0);
+                    } else if (noteVal == "B") {
+                        //add dot to mark note
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH4, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label
+                        g.setColor(Color.BLACK);
+                        g.drawString("B", D_LABELWIDTH4, D_LABELHEIGHT0);
+                    } else if (noteVal == "C") {
+                        //mark notes with dot
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH5, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("C", D_LABELWIDTH5, D_LABELHEIGHT0);
+
+                    } else if (noteVal == "C#") {
+                        //mark notes with dot
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH6, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("C#", D_LABELWIDTH6, D_LABELHEIGHT0);
+
+                    } else if (noteVal == "D") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH7, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
+
+                        //label dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("D", D_LABELWIDTH7, D_LABELHEIGHT0);
+
+                    } else if (noteVal == "Eb") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH8, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
+
+                        //label dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("Eb", D_LABELWIDTH8, D_LABELHEIGHT0);
+
+                    } else if (noteVal == "E") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH9, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("E", D_LABELWIDTH9, D_LABELHEIGHT0);
+                    } else if (noteVal == "F") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH10, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("F", D_LABELWIDTH10, D_LABELHEIGHT0);
+
+                    } else if (noteVal == "F#") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH11, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("F#", D_LABELWIDTH11, D_LABELHEIGHT0);
+
+                    } else if (noteVal == "G") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH0, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("G", D_LABELWIDTH0, D_LABELHEIGHT0);
+                    }
+                    else if (noteVal == "G#") {
+                        //add dot to mark notes
+                        g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH1, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
+
+                        //add label to dot
+                        g.setColor(Color.BLACK);
+                        g.drawString("G#", D_LABELWIDTH1, D_LABELHEIGHT0);
+                    }
+            	}
             }
         } //end paintNotes
 

@@ -498,27 +498,46 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
             float pitch = pitchDetectionResult.getPitch();
             String note = getNoteValue(pitch, 0);
 
-            if (tunerP == false) {
-                if (newNote == false) {
-                    if (startRecording == true) {
+            if (tunerP == false) 
+            {
+                if (newNote == false) 
+                {
+                    if (startRecording == true) 
+                    {
                         textArea1.append(note + " (" + pitch + ")\n");
                         textArea1.setCaretPosition(textArea1.getDocument().getLength());
                         if(allNotesOn == false)
                         {
+                        	fretBoardPlayer.setNoteDisplayMode(allNotesOn);
+                        	fretBoardPlayer.setNoteVal(note);
+                        	fretBoardPlayer.setOctave(octave);
+	                        fretBoardPlayer.repaint();
+                        }
+                        else
+                        {
+                        	fretBoardPlayer.setNoteDisplayMode(allNotesOn);
                         	fretBoardPlayer.setNoteVal(note);
                         	fretBoardPlayer.repaint();
                         }
-                    } else {
-                        if (userPrompt == false) {
+                    } 
+                    else 
+                    {
+                        if (userPrompt == false) 
+                        {
                             textArea1.append("RECORDING NOT IN PROGRESSS, PRESS START BUTTON\n");
                             userPrompt = true;
                         }
                     }
-                } else {
+                } 
+                else 
+                {
                     newNote = true;
                 }
-            } else if (tunerP == true) {
-                if (note != "couldnt be found") {
+            } 
+            else if (tunerP == true) 
+            {
+                if (note != "couldnt be found") 
+                {
                     tunerTextArea.setText("");
                     tunerTextArea.setText("\n");
                     tunerTextArea.append(note);
@@ -527,10 +546,13 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 
                 }
             }
-        } else {
+        } 
+        else 
+        {
             newNote = false;
         }
-    }
+        
+    }//end handlePitch
 
     //Modified from TarsoDSP oscilloscopeExample program by adding thread creation to run playback
     @Override
