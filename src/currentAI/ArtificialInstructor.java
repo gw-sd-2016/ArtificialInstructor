@@ -137,25 +137,18 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     public static JFrame frame;
     private boolean newNote = false;
     
+    private double startTime;
+    
     private JButton allNotes;
     private JButton singleNote;
     private boolean allNotesOn = false;
     
     
-    private String[] ACCEPTABLE_NOTES = {
-        "A",
-        "Bb",
-        "B",
-        "C",
-        "C#",
-        "D",
-        "Db",
-        "E",
-        "F",
-        "F#",
-        "G",
-        "G#"
-    };
+    private double [] nTimes = {1.00, 2.00, 3,00, 4,00, 5.00, 6.00, 7.00, 8.00};
+    private float [] nFreqs = {33.68f, 44.951f, 75.601f, 96.251f, 142.701f, 169.701f, 381.001f, 427.651f};
+    private int [] nOcts = {1, 1, 2, 2, 3, 3, 4, 4};
+    private FretLesson lessonOne;
+  
     private FretBoardPanel fretBoardTuner;
     private FretBoardPanel fretBoardPlayer;
     private int octave = 0;
@@ -168,6 +161,10 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
             if (startRecording == false) {
                 startRecording = true;
                 userPrompt = false;
+                
+                startTime = e.getWhen();	//get start time to play lessons
+                
+                lessonOne = new FretLesson(startTime, nTimes, nFreqs, nOcts);
             } else {
                 System.out.println("RECORDING ALREADY IN PROGRESS");
             }
@@ -493,7 +490,8 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     //Modified from TarsoDSP pitchDetectionExample from TarsoDSP example by adding conditionals and output msg
     @Override
     public void handlePitch(PitchDetectionResult pitchDetectionResult, AudioEvent audioEvent) {
-        if (pitchDetectionResult.getPitch() != -1) {
+    	
+    	if (pitchDetectionResult.getPitch() != -1) {
 
             float pitch = pitchDetectionResult.getPitch();
             String note = getNoteValue(pitch, 0);
@@ -508,16 +506,34 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                         textArea1.setCaretPosition(textArea1.getDocument().getLength());
                         if(allNotesOn == false)
                         {
+                        	fretBoardPlayer.setTypeNote(true);
                         	fretBoardPlayer.setNoteDisplayMode(allNotesOn);
                         	fretBoardPlayer.setNoteVal(note);
                         	fretBoardPlayer.setOctave(octave);
 	                        fretBoardPlayer.repaint();
+	                        
+
+	                        fretBoardPlayer.setTypeNote(false);
+	                    	fretBoardPlayer.setNoteDisplayMode(allNotesOn);
+	                    	String tempLN = getNoteValue(lessonOne.getLessonNote((float) audioEvent.getTimeStamp()), 0);
+	                    	fretBoardPlayer.setLesNoteVal(tempLN);
+	                    	fretBoardPlayer.setLesOctave(octave);
+	                        fretBoardPlayer.repaint(); 
                         }
                         else
                         {
+                        	fretBoardPlayer.setTypeNote(true);
                         	fretBoardPlayer.setNoteDisplayMode(allNotesOn);
                         	fretBoardPlayer.setNoteVal(note);
-                        	fretBoardPlayer.repaint();
+                        	//fretBoardPlayer.repaint();
+                        	
+
+                            fretBoardPlayer.setTypeNote(false);
+                            System.out.println(audioEvent.getTimeStamp());
+                        	String tempLN = getNoteValue(lessonOne.getLessonNote(audioEvent.getTimeStamp()), 0);
+                        	System.out.println(tempLN);
+                        	fretBoardPlayer.setLesNoteVal(tempLN);
+                            fretBoardPlayer.repaint(); 
                         }
                     } 
                     else 
@@ -531,7 +547,13 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                 } 
                 else 
                 {
-                    newNote = true;
+
+                    fretBoardPlayer.setTypeNote(false);
+                	fretBoardPlayer.setNoteDisplayMode(allNotesOn);
+                	String tempLN = getNoteValue(lessonOne.getLessonNote((float) audioEvent.getTimeStamp()), 0);
+                	fretBoardPlayer.setLesNoteVal(tempLN);
+                	fretBoardPlayer.setLesOctave(octave);
+                    fretBoardPlayer.repaint(); 
                 }
             } 
             else if (tunerP == true) 
@@ -549,7 +571,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
         } 
         else 
         {
-            newNote = false;
+        	
         }
         
     }//end handlePitch
@@ -564,6 +586,8 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
             oPanel.paint(data, event);
             oPanel.repaint();
 
+             
+            
             /*
             new Thread(new Runnable(){
             	@Override
