@@ -1,5 +1,12 @@
+/*
+ * Shawn Huntzberry
+ * 
+ * The below code is a combination of my implementation of the JavaSound API and examples from the 
+ * TarsoDSP library and examples. Not all the code below has been created by me, but the code I have used
+ * I have noted the credit where it has come from. 
+ * 
+ */
 package currentAI;
-
 /*
  * Shawn Huntzberry
  * 
@@ -30,14 +37,14 @@ package currentAI;
 *  TarsosDSP includes modified source code by various authors,
 *  for credits and info, see README.
 * 
-
-@inproceedings{six2014tarsosdsp,
-	  author      = {Joren Six and Olmo Cornelis and Marc Leman},
-	  title       = {{TarsosDSP, a Real-Time Audio Processing Framework in Java}},
-	  booktitle   = {{Proceedings of the 53rd AES Conference (AES 53rd)}}, 
-	  year        =  2014
-	}
-	
+*
+*   @inproceedings{six2014tarsosdsp,
+*	  author      = {Joren Six and Olmo Cornelis and Marc Leman},
+*	  title       = {{TarsosDSP, a Real-Time Audio Processing Framework in Java}},
+*	  booktitle   = {{Proceedings of the 53rd AES Conference (AES 53rd)}}, 
+*	  year        =  2014
+*	}
+*	
 */
 
 
@@ -61,7 +68,6 @@ import be.tarsos.dsp.AudioDispatcher;
 import be.tarsos.dsp.AudioEvent;
 import be.tarsos.dsp.Oscilloscope;
 import be.tarsos.dsp.Oscilloscope.OscilloscopeEventHandler;
-import be.tarsos.dsp.beatroot.Peaks;
 import be.tarsos.dsp.io.jvm.JVMAudioInputStream;
 import be.tarsos.dsp.pitch.PitchDetectionHandler;
 import be.tarsos.dsp.pitch.PitchDetectionResult;
@@ -89,6 +95,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+
+/*
+ * Imports from this package
+ */
 import currentAI.PlayBackThread;
 import currentAI.OscilloscopePanel;
 
@@ -100,71 +110,86 @@ import currentAI.OscilloscopePanel;
  *  	-graphs realtime input using TarsoDSP oscilloscope program
  *  	-maps pitch of input to note using getNoteValue() method and TarsoDSP pitchDetectionHandler 
  *  	-outputs sound input using playBack() method and class playThread
+ *  	-(in red)shows the user which note they are playing and(or) the notes that have that same frequency
+ *  	-(in blue)shows the notes the user is expected to play next
+ *  	-Allows the user to use a tuner, that is accurate with all types of instruments up to the 4th octave 
  */
 
 public class ArtificialInstructor extends JFrame implements PitchDetectionHandler, OscilloscopeEventHandler {
-
-    
-
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private final int MIXERVAL = 1;
+	/*
+	 * GLOBAL Constant variables
+	 */
+	private final int MIXERVAL = 1;				//mixer value in array to set(1 = microphone, 2 = line-in)
+	private final int BUTTON_WIDTH = 150;		//button width of 150 for all in "buttonsPanel"
+	private final int BUTTON_HEIGHT = 50;		//button height of 50 for all buttons in"buttonsPanel"
+	
+    /*
+     * Global variables for pitch detection(PitchDetectionHandler) and oscilloscope(OscilloscopeEventHandler) 
+     */
+    private AudioDispatcher dispatcher;			//runnable job the PitchProcessors are added to(
+    private PitchEstimationAlgorithm algo;		//Algorithm to be used by the PitchProcessor PitchDetectionHandler
 
-    //variables for pitch detection and oscilloscope 
-    private AudioDispatcher dispatcher;
-    private PitchEstimationAlgorithm algo;
+    /*
+     * Variables used to trigger events by buttons
+     */
+    private boolean startRecording = false;				//when start button pressed this is set to true, if stop pressed then set to false
+    private boolean userPrompt = false;					//triggers if it is appropriate for the GUI to prompt the user
+    private boolean tunerP = false;						//if tuner button pressed this is set to true and tunerPanel is shown, if back pressed this is false
+    private boolean allNotesOn = false;					//variable to track which mode is active, if false then single note mode on else all notes mode is on
 
-    //variables for computing 
-    private boolean startRecording = false;
 
-    //variables for GUI
-    private JPanel buttonsPanel;
-    private final OscilloscopePanel oPanel;
-    private final JPanel jP, tunerPanel;
-    private final JScrollPane sp;
-    private JButton start;
-    private JButton stop;
-    private JTextArea textArea1;
-    private boolean userPrompt = false;
-    private boolean tunerP = false;
-    private boolean backP = false;
-    private JButton tuner;
-    private JButton back;
-    private JTextArea tunerTextArea;
-    public static JFrame frame;
-    private boolean newNote = false;
+    /*
+     * variables for GUI
+     */
+    public static JFrame frame;							//frame for the ArtificalInstructor Object
+    private JPanel buttonsPanel;						//panel to hold all of the buttons on the lesson player page
+    private final OscilloscopePanel oPanel;				//Custom panel, from this package, but edited from TarsoDSP to show soundwave
+    private final JPanel lPanel, tunerPanel;			//two panels the user may user(lesson player and tuner player)
+    private final JScrollPane sp;						//scroll pane to apply to lessonTextArea to allow old info to be stored with new info
+    private JTextArea lessonTextArea, tunerTextArea;	//different textareas used by the different screens
+    private JButton tuner, back, start;					//buttons used by tuner panel and lesson panel
+    private JButton stop, allNotes, singleNote;			//more buttons used by tuner/lesson
+    private FretBoardPanel fretBoardTuner;				//FretBoardPanel that is used/updated by the tuner			
+    private FretBoardPanel fretBoardPlayer;				//FretBoardPanel that is used/updated by the lesson page
+    private int octave = 0;								//value to know where to display current note on fretboard	
+    private double startTime = -1;						//to properly display time based on when user presses start, not when program loads			
     
-    private double startTime;
-    
-    private JButton allNotes;
-    private JButton singleNote;
-    private boolean allNotesOn = false;
-    
-    
-    private double [] nTimes = {1.00, 2.00, 3,00, 4,00, 5.00, 6.00, 7.00, 8.00};
-    private float [] nFreqs = {33.68f, 44.951f, 75.601f, 96.251f, 142.701f, 169.701f, 381.001f, 427.651f};
-    private int [] nOcts = {1, 1, 2, 2, 3, 3, 4, 4};
-    private FretLesson lessonOne;
-  
-    private FretBoardPanel fretBoardTuner;
-    private FretBoardPanel fretBoardPlayer;
-    private int octave = 0;
+    /*
+     * Variables used to create a new lesson
+     * 		**HARD CODED HERE FOR NOW, EVENTUALLY THEY WILL BE STORED SOMEWHERE ELSE AND ONLY READ IN
+     * 		  WHEN THE PROGRAM HAS A SPECIFIC LESSON CALLED
+     */
+    private double [] nTimes = {3.00, 6.00, 9.00, 12.00, 15.00, 18.00, 21.00, 14.00};			//times to play notes at
+    private String [] nNotes = {"C", "F#", "Eb", "G", "D", "F", "G", "A"};					//value of notes 
+    private int [] nOcts = {2, 1, 2, 1, 2, 3, 1, 2};										//octaves of notes
+    private boolean [] nRing = {false, true, false, true, false, true, false, true};
+    private FretLesson lessonOne;															//Lesson object to store operate using data
 
+    
+    
     //*************BEING ACTION LISTENERS*****************//
-    //Actionlistener for START button
+   
+    /*
+     * Actionlistener for START button
+     * 	If variable startRecording is set to false 
+     * 		>set it to true
+     * 		>this will allow the program to know that the lesson should start 
+     * 	 	 and input should be processed
+     * 		>set userPrompt equal to false so GUI may be properly updated with output prompt
+     *	Else
+     * 		>simply output a prompt to the user to let them know the lesson has already started
+    */
     private ActionListener startRec = new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent e) {
             if (startRecording == false) {
                 startRecording = true;
                 userPrompt = false;
-                
-                startTime = e.getWhen();	//get start time to play lessons
-                
-                lessonOne = new FretLesson(startTime, nTimes, nFreqs, nOcts);
             } else {
                 System.out.println("RECORDING ALREADY IN PROGRESS");
             }
@@ -172,41 +197,80 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
         }
     };
 
-    //Actionlistener for STOP button
+    /*
+     * Actionlistener for STOP button
+     * 		If startRecording is true( start button has been pressed )
+     * 			>set startRecording to false
+     * 			>set startTime = -1 so program will start lesson again when start pressed next
+     * 		Else
+     * 			>print out a prompt to the user saying recording is not in progress
+     */
     private ActionListener stopRec = new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent e) {
             if (startRecording == true) {
                 startRecording = false;
                 userPrompt = false;
+                startTime = -1;
             } else {
                 System.out.println("NO RECORDING IN PROGRESS TO STOP");
             }
         }
     };
 
+    /*
+     * ActionListener to signal tunner page
+     * 		>add 
+     * 			the tunerPanel to the frame
+     * 		>remove
+     * 			jP panel, the lesson page with scrollbox, buttons, and fretboard
+     * 			oPanel, the graph showing real time sound wave
+     * 		>set tunerP variable to true, so handlePitch may work properly
+     */
     private ActionListener tunerPressed = new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent e) {
             frame.add(tunerPanel);
-            frame.remove(jP);
+            frame.remove(lPanel);
             frame.remove(oPanel);
             frame.repaint();
             tunerP = true;
         }
     };
 
+    /*
+     * ActionListener to signal lesson page, from the tuner page
+     * 		>remove
+     * 			the tunerPanel to the frame
+     * 		>add
+     * 			jP panel, the lesson page with scrollbox, buttons, and fretboard
+     * 			oPanel, the graph showing real time sound wave
+     * 		>set tunerP variable to false, so handlePitch may work properly
+     */
     private ActionListener backPressed = new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent e) {
             frame.remove(tunerPanel);
-            frame.add(jP);
+            frame.add(lPanel);
             frame.add(oPanel);
             frame.repaint();
             tunerP = false;
         }
     };
     
+    /*
+     * ActionListener to determine which notes to draw on FretBoardPanel
+     * 		If variable allNotesOn is true
+     * 			>set allNotes to false
+     * 			>remove the "Show single notes" button from buttonsPanel
+     * 			>add the "Show all notes" button from the buttonsPanel
+     * 			>repaint the panel and the frame
+     * 		Else, allNotesOn is false
+     * 			>set allNotesOn to true
+     * 			>remove the "Show all notes" button
+     * 			>add the "Show single notes" button
+     * 			>repaint panel and the frame
+     */
     private ActionListener allNotesPressed = new ActionListener() {
         @Override
         public void actionPerformed(final ActionEvent e) {
@@ -239,86 +303,151 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
      * Creates the GUI, sets algorithm, and calls necessary functions to start input
      */
     public ArtificialInstructor() {
+    	
+    	/*
+    	 * set properties of the frame
+    	 */
         this.setLayout(new GridLayout(2, 1));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Artifical Instructor");
 
-        algo = PitchEstimationAlgorithm.FFT_YIN;
-        //algo = PitchEstimationAlgorithm.DYNAMIC_WAVELET;
-        //algo = PitchEstimationAlgorithm.MPM;
-        //algo = PitchEstimationAlgorithm.YIN;
+        /*
+         * Set global variable for the PitchProcessor, PitchDetectionHandler to user
+         * 
+         * currently: FFT_YIN has proved to be useful for accurate results
+         * 		>Problems:
+         * 			The pitch returned with FFT_YIN gives a return value both when 
+         * 				1) a new note is initially strumed 
+         * 				2) a note is ringing out
+         * 		>Solutions:
+         * 			1) could use the DYNAMIC_WAVELET but does not give as accurate readings
+         * 			2) could require the hard coding of notes to account for how long a note will 
+         * 			   ring and when user needs to silence
+         */
+        algo = PitchEstimationAlgorithm.FFT_YIN;			
+        	//algo = PitchEstimationAlgorithm.DYNAMIC_WAVELET;
+        	//algo = PitchEstimationAlgorithm.MPM;
+        	//algo = PitchEstimationAlgorithm.YIN;
 
 
+        /*
+         * try to call performTasks method in order to establish audio input/output
+         * if there is an error print the stack trace
+         */
         try {
             performTasks();
         } catch (LineUnavailableException | UnsupportedAudioFileException e) {
             e.printStackTrace();
         }
 
-        //initialize panel
-        oPanel = new OscilloscopePanel();
-        //initialize textarea and scrollpane
-        textArea1 = new JTextArea();
-        textArea1.setEditable(false);
-        Font font1 = textArea1.getFont();
+     
+        oPanel = new OscilloscopePanel();	// Init the panel to be used to show the soundwave of input
+        
+        /*
+         * 1) Init the TextArea object and dont allow users to edit 
+         * 		Create custom font in order to have a larger font size 
+         * 2) Init the ScrollPane object which will allow the user to scroll 
+         * 		through the output in textarea
+         */
+        lessonTextArea = new JTextArea();						//init textArea1
+        lessonTextArea.setEditable(false);						//dont allow user to edit this
+        Font font1 = lessonTextArea.getFont();					//get font, manipulate it, and set new font
         float fSize = font1.getSize() + 10.0f ;
-        textArea1.setFont(font1.deriveFont(fSize));
-        sp = new JScrollPane(textArea1);
-        sp.setPreferredSize(new Dimension(200, 100));
+        lessonTextArea.setFont(font1.deriveFont(fSize));
+        sp = new JScrollPane(lessonTextArea);					//init sp, using textArea1 just created
+        sp.setPreferredSize(new Dimension(200, 100));			//set the size of the scroll pane 
 
-        //create a panel for the start and stop buttons to go in
-        buttonsPanel = new JPanel();
-        //buttonsPanel.setLayout(new GridLayout(3, 1));
-        buttonsPanel.setMaximumSize(new Dimension(50, 50));
-        buttonsPanel.setVisible(true);
 
-        //create start button and assign the actionlistener
+        /*
+         * Init the button to be used to trigger single note mode
+         * Add the action listener that starts the input and tracks correct variables
+         * set a prefered size to match other buttons
+         */
         start = new JButton("Start");
         start.addActionListener(startRec);
-        start.setPreferredSize(new Dimension(150, 50));
+        start.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         start.setBackground(Color.green);
-        buttonsPanel.add(start);
 
-        //create a stop button and assign the actionlistener
+        /*
+         * Init the button to be used to trigger stop button for input
+         * Add the action listener that stops and makes correct variable changes
+         * set a prefered size to match other buttons
+         */
         stop = new JButton("Stop");
         stop.addActionListener(stopRec);
-        stop.setPreferredSize(new Dimension(150, 50));
+        stop.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         stop.setBackground(Color.red);
-        buttonsPanel.add(stop);
         
+        /*
+         * Init the button to be used to trigger the tunerPanel
+         * Add the action listener that change the panels and resets frame
+         * set a prefered size to match other buttons
+         */
         tuner = new JButton("Start Tuner");
         tuner.addActionListener(tunerPressed);
-        tuner.setPreferredSize(new Dimension(150, 50));
-        buttonsPanel.add(tuner);
+        tuner.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         
+        /*
+         * Init the button to be used to trigger all note mode
+         * Add the action listener that changes mode boolean 
+         * set a prefered size to match other buttons
+         */
         allNotes = new JButton("Show All Notes");
         allNotes.addActionListener(allNotesPressed);
-        allNotes.setPreferredSize(new Dimension(150, 50));
+        allNotes.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
         allNotes.setBackground(Color.red);
-        buttonsPanel.add(allNotes);
-        
+       
+        /*
+         * Init the button to be used to trigger single note mode
+         * Add the action listener that changes mode boolean 
+         * set a prefered size to match other buttons
+         * set Visible and add to the buttons panel 
+         */
         singleNote = new JButton("Show Single Note");
         singleNote.addActionListener(allNotesPressed);
         singleNote.setPreferredSize(new Dimension(150, 50));
         singleNote.setBackground(Color.red);
-        buttonsPanel.add(singleNote);
         singleNote.setVisible(false);
-
+        
+        /*
+         * Init the JPanel to hold all of the buttons and set visible
+         * Add all necessary buttons
+         */
+        buttonsPanel = new JPanel();						
+        buttonsPanel.setVisible(true);
+        buttonsPanel.add(start);
+        buttonsPanel.add(stop);
+        buttonsPanel.add(tuner);
+        buttonsPanel.add(allNotes);
+        buttonsPanel.add(singleNote);
+        
+        /*
+         * Init the FretBoardPanel used by the lesson player
+         * Set the current note value to nothing to start
+         */
         fretBoardPlayer = new FretBoardPanel();
         fretBoardPlayer.setNoteVal("");
 
-        //initialize the components to go in, and add components
-        jP = new JPanel();
-        jP.setLayout(new BorderLayout());
-        jP.add(sp, BorderLayout.BEFORE_LINE_BEGINS);
-        jP.add(buttonsPanel, BorderLayout.PAGE_START);
-        jP.add(fretBoardPlayer, BorderLayout.CENTER);
-        jP.repaint();
-        jP.setVisible(true);
+        /*
+         * Init the JPanel that holds the main screen
+         * 		-Set the layout
+         * 		-Add (the scrollpane(w/ textArea), panel with buttons, and FretBoardPanel used by player
+         * 		-repaint and set visible
+         */
+        lPanel = new JPanel();
+        lPanel.setLayout(new BorderLayout());
+        lPanel.add(sp, BorderLayout.BEFORE_LINE_BEGINS);
+        lPanel.add(buttonsPanel, BorderLayout.PAGE_START);
+        lPanel.add(fretBoardPlayer, BorderLayout.CENTER);
+        lPanel.repaint();
+        lPanel.setVisible(true);
 
-        //Tuner panel creation and additions
-        tunerPanel = new JPanel();
-        tunerPanel.setLayout(new BorderLayout());
+
+        /*
+         * Init the textArea to display the notes read by the tuner
+         * 		-change size of font in order to have notes appear really big 
+         * 		-set size of the box in order to give FretBoardPanel used by the tuner has enough space
+         */
         tunerTextArea = new JTextArea();
         Font fontTuner = tunerTextArea.getFont();
         tunerTextArea.setDisabledTextColor(Color.RED);
@@ -327,24 +456,42 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
         tunerTextArea.setPreferredSize(new Dimension(200, 200));
         tunerTextArea.setVisible(true);
 
+        /*
+         * Initialize back button to be used by the tunerPanel
+         * Add the actionlistener to the button
+         * Add the button to the buttonsPanel
+         */
         back = new JButton("Leave Tuner");
         back.addActionListener(backPressed);
         buttonsPanel.add(back);
-        //buttonsPanel.setPreferredSize(new Dimension(50,50));
 
+        /*
+         * Initialize the FretBoardPanel to be used by the tuner, set first note to nothing to display
+         */
         fretBoardTuner = new FretBoardPanel();
         fretBoardTuner.setNoteVal("");
 
+        /*
+         * 1) Init the panel that is used by the tuner functionality
+         * 		-set the layout
+         * 
+         * 2) Add the necessary elements to the tunerPanel
+         * 		-fretBoardTuner, in the center of the panel
+         * 		-tunerTextArea, to the left side of the panel
+         * 		-back button to the bottom of the panel
+         */
+        tunerPanel = new JPanel();
+        tunerPanel.setLayout(new BorderLayout());
         tunerPanel.add(fretBoardTuner, BorderLayout.CENTER);
         tunerPanel.add(tunerTextArea, BorderLayout.BEFORE_LINE_BEGINS);
         tunerPanel.add(back, BorderLayout.PAGE_END);
         tunerPanel.setVisible(true);
 
-        //add the graph(panel) and output(buttons and textarea) to frame
-        add(jP);
-        add(oPanel);
-
-
+        /*
+         * add panels to frame
+         */
+        add(lPanel);			//button panel and textarea
+        add(oPanel);		//panel to display sound wave
 
     }
 
@@ -354,18 +501,25 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
      * 	Uses a different format than analysis in order to output the correct sound
      */
     public void playBack() {
-            AudioFormat playBackFormat = new AudioFormat(1024, 16, 1, true, true);
-            ByteArrayOutputStream out; //input
-            int numBytesRead; //input
-            int bytesRead; //input
-            byte[] data; //input
-            TargetDataLine instrument = null; //input
-            DataLine.Info info1; //input
-
-            byte audioData[]; //output 
-            SourceDataLine sourceDataLine = null; //output
-            AudioInputStream ais; //output
-            DataLine.Info dataLineInfo1; //output
+            AudioFormat playBackFormat = new AudioFormat(4096, 16, 1, true, true);		//input & output
+            
+            
+            /*
+             * Variables needed for input
+             */
+            ByteArrayOutputStream out; 				//InputStream reads data into this object
+            int numBytesRead; 						//stores the number of bytes read from stream, to know how to allocate memory
+            byte[] data; 							//Stores the data that is converted from ByteArrayOutputStream "out"
+            TargetDataLine tdl = null; 			//Init object to create TargetDataLine for incoming data
+            DataLine.Info infoIN; 					//input & output
+            
+            /*
+             * Variables needed for output
+             */
+            byte audioData[]; 						//Array to store values for output of data to call the thread
+            SourceDataLine sdl = null; 				//Init object to create SourceDataLine for outgoing data
+            AudioInputStream ais; 					//output
+            DataLine.Info infoOUT; 					//output
 
             /*
              *  1)sets up targetDataLine to read in using specific format
@@ -378,44 +532,51 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
              *  8)creates new playThread and runs using sourceDataLine and audio data read in
              */
             try {
-                instrument = AudioSystem.getTargetDataLine(playBackFormat);
+                tdl = AudioSystem.getTargetDataLine(playBackFormat);
 
-                info1 = new DataLine.Info(TargetDataLine.class, playBackFormat);
-                instrument = (TargetDataLine) AudioSystem.getLine(info1);
-                instrument.open(playBackFormat);
-                instrument.start();
+                infoIN = new DataLine.Info(TargetDataLine.class, playBackFormat);
+                tdl = (TargetDataLine) AudioSystem.getLine(infoIN);
+                tdl.open(playBackFormat);
+                tdl.start();
 
                 out = new ByteArrayOutputStream();
-                data = new byte[instrument.getBufferSize()];
-
-                bytesRead = 0;
+                data = new byte[tdl.getBufferSize()/4];
 
                 try {
-                    numBytesRead = instrument.read(data, 0, 1024);
-                    bytesRead = bytesRead + numBytesRead;
-                    System.out.println(bytesRead);
+                	/*
+                	 * Try and read in data, then set data to array audioData
+                	 * reset ByteArrayOutputStream to be used again
+                	 */
+                    numBytesRead = tdl.read(data, 0, 1024);
                     out.write(data, 0, numBytesRead);
-
                     audioData = out.toByteArray();
                     out.reset();
 
-
+                    /*
+                     * Start setting up to output data and create/call thread
+                     */
                     InputStream byteArrayInputStream = new ByteArrayInputStream(audioData);
                     ais = new AudioInputStream(byteArrayInputStream, playBackFormat, audioData.length / playBackFormat.getFrameSize());
-                    dataLineInfo1 = new DataLine.Info(SourceDataLine.class, playBackFormat);
-                    sourceDataLine = (SourceDataLine) AudioSystem.getLine(dataLineInfo1);
-                    sourceDataLine.open(playBackFormat, 1024);
+                    infoOUT = new DataLine.Info(SourceDataLine.class, playBackFormat);
+                    sdl = (SourceDataLine) AudioSystem.getLine(infoOUT);
+                    sdl.open(playBackFormat, 1024);
 
-                    Runnable threadJob = new PlayBackThread(sourceDataLine, ais);
+                    /*
+                     * 1) Create runnable job for thread using inputs
+                     * 		SourceDataLine to know where to play out to
+                     * 		AudioInputSteam to be able to send the data
+                     * 2) Create and start thread
+                     */
+                    Runnable threadJob = new PlayBackThread(sdl, ais);
                     Thread t1 = new Thread(threadJob);
 
                     t1.start();
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    e.printStackTrace();		//print for exceptions
                 }
             } catch (LineUnavailableException e) {
-                e.printStackTrace();
+                e.printStackTrace();			//print error for errors in the line input/output 
             }
 
         } //end playBack()
@@ -464,7 +625,8 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 
             //start thread for dispatcher
             new Thread(dispatcher, "Audio dispatching").start();
-
+            
+            System.out.println("here");
         } //end performTasks
 
 
@@ -472,16 +634,13 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     public static void main(String...strings) throws InterruptedException,
         InvocationTargetException {
 
-
             SwingUtilities.invokeAndWait(new Runnable() {
                 @Override
                 public void run() {
-
-                    frame = new ArtificialInstructor();
-                    frame.pack();
-                    frame.setSize(1200, 800);
-
-                    frame.setVisible(true);
+                    frame = new ArtificialInstructor();		//initilize frame to have new object
+                    frame.pack();							//pack the frame
+                    frame.setSize(1200, 800);				//set the default size of the frame
+                    frame.setVisible(true);					//make visible to the user
                 }
             });
         }
@@ -491,78 +650,167 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     @Override
     public void handlePitch(PitchDetectionResult pitchDetectionResult, AudioEvent audioEvent) {
     	
+    	/*
+    	 * If variables meet the requirements
+    	 * 		initialize startTime variable to avoid this being called before lesson is over, or stop button pressed
+    	 * 		initialize lessonOne using data
+    	 * 		set stopPressed equal to true
+    	 */
+    	if(startTime == -1 && startRecording == true) {
+        	startTime = audioEvent.getTimeStamp();
+            lessonOne = new FretLesson(startTime, nTimes, nNotes, nOcts, nRing);
+            fretBoardPlayer.setNoteDisplayMode(allNotesOn);
+            //stopPressed = true;
+        }
+    	
+    	if(startRecording == true){
+    		lessonOne.incrementCnt(audioEvent.getTimeStamp());
+    		fretBoardPlayer.setNoteDisplayMode(allNotesOn);
+    		fretBoardPlayer.setLesNoteVal(lessonOne.getNoteValue());
+    		fretBoardPlayer.setLesOctave(lessonOne.getNoteOct());
+    		fretBoardPlayer.setLesColor(lessonOne.getNoteColor());
+    		fretBoardPlayer.repaint(); 
+    	}
+    	
+    	/*
+    	 * If the value read in by pitchDetectionResult is not -1
+    	 * 		>a usable value has been read in from the user by the dispatcher
+    	 * 		>step through a set of conditionals to properly update the correct GUI
+    	 */
     	if (pitchDetectionResult.getPitch() != -1) {
 
-            float pitch = pitchDetectionResult.getPitch();
-            String note = getNoteValue(pitch, 0);
-
+            float pitch = pitchDetectionResult.getPitch();		//set pitch value to the value of the value of the parameter read in 
+            String note = getNoteValue(pitch, 0);				//user pitch value to call getNoteValue in order to set corresponding note letter
+           	
+            /*
+             * if tunerP is note pressed then we are on the main screen for lesson
+             * 		>step through other conditionals to properly update the correct
+             * 			>FretBoardPanel 
+             * 			>type of display
+             * 			>textareas
+             */
             if (tunerP == false) 
             {
-                if (newNote == false) 
+            	/*
+            	 * If startRecording is true then process data properly
+            	 */
+                if (startRecording == true) 
                 {
-                    if (startRecording == true) 
-                    {
-                        textArea1.append(note + " (" + pitch + ")\n");
-                        textArea1.setCaretPosition(textArea1.getDocument().getLength());
+                		/*
+                		 * Update the scrollpane and textArea1 to show the input
+                		 * 		>show note value and the pitch value
+                		 * 		>set the caret position of textArea1 to the bottom so user sees the latest readings
+                		 */
+                		lessonTextArea.append(note + octave + " (" + pitch + ")\n");
+                        lessonTextArea.setCaretPosition(lessonTextArea.getDocument().getLength());
+                        
+                        /*
+                         * If allNotesOn is false, update fretboard using only single note display for note
+                         * Else, update fretboard using all possible note displays for that note
+                         */
                         if(allNotesOn == false)
                         {
-                        	fretBoardPlayer.setTypeNote(true);
+	                        /*
+                        	 * Update the FretBoardPanel to include the lesson notes
+                        	 * 		>increment the counter with the lesson to get correct note for time
+                        	 * 		>set the value to note expected in lesson, at current time
+                        	 *		>set the value to octave of the note expected in lesson, at current time
+                        	 * 		>repaint the frame
+                        	 */
+	                    	lessonOne.incrementCnt(audioEvent.getTimeStamp());
+	                    	fretBoardPlayer.setLesNoteVal(lessonOne.getNoteValue());
+	                    	fretBoardPlayer.setLesOctave(lessonOne.getNoteOct());
+	                    	fretBoardPlayer.setLesRing(lessonOne.getNoteRing());
+	                    	fretBoardPlayer.setLesColor(lessonOne.getNoteColor());
+	                        fretBoardPlayer.repaint(); 
+	                        
+	                        
+                        	/*
+                        	 * Update the FretBoardPanel to include the user notes
+                        	 * 		>set the display mode 
+                        	 * 		>set the value to note read in
+                        	 * 		>set the corresponding octave to display proper single note
+                        	 * 		>repaint the panel with updated info
+                        	 */
                         	fretBoardPlayer.setNoteDisplayMode(allNotesOn);
                         	fretBoardPlayer.setNoteVal(note);
                         	fretBoardPlayer.setOctave(octave);
 	                        fretBoardPlayer.repaint();
 	                        
-
-	                        fretBoardPlayer.setTypeNote(false);
-	                    	fretBoardPlayer.setNoteDisplayMode(allNotesOn);
-	                    	String tempLN = getNoteValue(lessonOne.getLessonNote((float) audioEvent.getTimeStamp()), 0);
-	                    	fretBoardPlayer.setLesNoteVal(tempLN);
-	                    	fretBoardPlayer.setLesOctave(octave);
-	                        fretBoardPlayer.repaint(); 
+	                        /*
+	                         * if boolean returned by getLessonPlace is true
+	                         * 		>lesson has been completed 
+	                         * 		>set startRecording to false so 
+	                         * 		>set startTime to -1 so new object can be initialized when start pressed again
+	                         * 		>reset lessonPlace to be be able to be used when new object is created
+	                         */
+	                        if(lessonOne.getLessonPlace() == true)
+	                        {
+	                        	startRecording = false;
+	                        	//stopPressed = true;
+	                        	startTime = -1;
+	                        	lessonOne = null;
+	                        	
+	                        }
+	                        
+	                        
                         }
                         else
                         {
-                        	fretBoardPlayer.setTypeNote(true);
+                        	/*
+                        	 * Update the FretBoardPanel to include the lesson notes
+                        	 * 		>increment the counter with the lesson to get correct note for time
+                        	 * 		>set the value to note expected in lesson, at current time
+                        	 * 		>repaint the frame
+                        	 */
+                            lessonOne.incrementCnt(audioEvent.getTimeStamp());
+                        	fretBoardPlayer.setLesNoteVal(lessonOne.getNoteValue());
+	                    	fretBoardPlayer.setLesRing(lessonOne.getNoteRing());
+	                    	fretBoardPlayer.setLesColor(lessonOne.getNoteColor());
+                            fretBoardPlayer.repaint(); 
+                            
+                        	/*
+                        	 * Update the FretBoardPanel to include the user notes
+                        	 * 		>set the display mode 
+                        	 * 		>set the value to note read in
+                        	 * 		>repaint panel
+                        	 */
                         	fretBoardPlayer.setNoteDisplayMode(allNotesOn);
                         	fretBoardPlayer.setNoteVal(note);
-                        	//fretBoardPlayer.repaint();
-                        	
-
-                            fretBoardPlayer.setTypeNote(false);
-                            System.out.println(audioEvent.getTimeStamp());
-                        	String tempLN = getNoteValue(lessonOne.getLessonNote(audioEvent.getTimeStamp()), 0);
-                        	System.out.println(tempLN);
-                        	fretBoardPlayer.setLesNoteVal(tempLN);
-                            fretBoardPlayer.repaint(); 
+                        	fretBoardPlayer.repaint();
                         }
                     } 
                     else 
                     {
+                    	/*
+                    	 * If userPrompt is equal to false then recording button has not been pressed
+                    	 * Or may have been pressed, but the last button pressed was the stop button
+                    	 * 		>Prompt the user and set userPrompt to true in order to only display message once
+                    	 */
                         if (userPrompt == false) 
                         {
-                            textArea1.append("RECORDING NOT IN PROGRESSS, PRESS START BUTTON\n");
+                        	lessonTextArea.append("RECORDING NOT IN PROGRESSS, PRESS START BUTTON\n");
                             userPrompt = true;
                         }
                     }
-                } 
-                else 
-                {
-
-                    fretBoardPlayer.setTypeNote(false);
-                	fretBoardPlayer.setNoteDisplayMode(allNotesOn);
-                	String tempLN = getNoteValue(lessonOne.getLessonNote((float) audioEvent.getTimeStamp()), 0);
-                	fretBoardPlayer.setLesNoteVal(tempLN);
-                	fretBoardPlayer.setLesOctave(octave);
-                    fretBoardPlayer.repaint(); 
-                }
+                
             } 
             else if (tunerP == true) 
             {
+            	
+            	/*
+            	 * If tunerP is pressed then the tuner page is active, 
+            	 * 		>update the tunerText area to display nothing and go down a space (FOR LOOKS)
+            	 * 		>add the currently read in note to the textArea so user can see what they are playing
+            	 * 		>set FretBoardPanel being used by tuner to display the users input
+            	 * 		>repaint the FretBoardPanel
+            	 */
                 if (note != "couldnt be found") 
                 {
                     tunerTextArea.setText("");
                     tunerTextArea.setText("\n");
-                    tunerTextArea.append(note);
+                    tunerTextArea.append(note + octave);
+                    fretBoardTuner.setOctave(octave);
                     fretBoardTuner.setNoteVal(note);
                     fretBoardTuner.repaint();
 
@@ -571,7 +819,23 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
         } 
         else 
         {
-        	
+        	/*
+        	 * Even if dispatcher is not reading in a pitch from user, update the fretboard to show lesson note
+        	 * 		If recording is true then 
+        	 * 			>increment lesson count
+        	 * 			>set lesson variables using methods for note and octave
+        	 * 			>repaint the FretBoardPanel used by lesson page
+        	 * 		
+        	 */
+        	if(startRecording == true)
+        	{
+        		lessonOne.incrementCnt(audioEvent.getTimeStamp());
+        		fretBoardPlayer.setLesNoteVal(lessonOne.getNoteValue());
+        		fretBoardPlayer.setLesOctave(lessonOne.getNoteOct());
+                fretBoardPlayer.setLesRing(lessonOne.getNoteRing());
+                fretBoardPlayer.setLesColor(lessonOne.getNoteColor());
+        		fretBoardPlayer.repaint(); 
+        	}
         }
         
     }//end handlePitch
@@ -580,22 +844,30 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     @Override
     public void handleEvent(float[] data, AudioEvent event) {
         if (startRecording == true) {
-            for (int i = 0; i < data.length; i++) {
+            
+        	/*
+        	 * for loop to increase the audio data so the wave is more noticable
+        	 */
+        	for (int i = 0; i < data.length; i++) {
                 data[i] = data[i] * 5;
             }
-            oPanel.paint(data, event);
-            oPanel.repaint();
-
-             
+            
+            oPanel.paint(data, event);			//paint the panel using the new data
+            oPanel.repaint();					//repaint to display to the user
             
             /*
+             * Create new thread and override run method
+             * Set thread to call playBack method to do real time output
+             * 		>Problem: current delay with output, also causing delays with graph 
+             * Start the thread to run
+             */
             new Thread(new Runnable(){
             	@Override
             	public void run(){
             		playBack();
             	}
             }).start();
-            */
+            
         }
     }
 
@@ -770,4 +1042,3 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
         } //end getNoteValue()
 
 } //end Artifical Instructor
-
