@@ -22,7 +22,7 @@ public class FretLesson {
 		nOct = octs;
 		nRing = ring;
 		cnt = 0;
-		
+		score = 0;
 	}
 	
 	public void setStartTime(double inputT)
@@ -30,8 +30,44 @@ public class FretLesson {
 		startTime = inputT;
 	}
 	
-	public boolean getLessonPlace(){
-		return finished;
+	public void lessonStop(double inputT){
+		
+		incrementCnt(inputT);
+		
+		if( notes[cnt].equals("Z")  ){
+			finished = true;
+		}
+		else{
+			finished = false;
+			
+		}
+	}
+	
+	public boolean getLessonPlace(double inputT){
+		boolean isfinished;
+		
+		if(finished == false){
+			
+			incrementCnt(inputT);
+			
+			if( notes[cnt].equals("Z")  ){
+				finished = true;
+				isfinished = true;
+			}
+			else{
+				isfinished = false;
+				
+			}
+		}else
+		{
+			isfinished = true;
+		}
+		
+		return isfinished;
+	}
+	
+	public int getScore(){
+		return score;
 	}
 	
 	public void setLessonPlace(){
@@ -51,17 +87,56 @@ public class FretLesson {
 	 */
 	public void checkAccuracy(double inputT, String uNote, int uOct){
 		
-		if(nRing[cnt] == true){
-			if(ringChecked == false){
+		if(finished == false){
+			
+		
+			if(nRing[cnt] == true){
+				
+				
+					if( uNote == notes[cnt] ){
+						score++;
+						System.out.println("Correct Note");
+					
+						if( uOct == nOct[cnt]){
+							score++;
+							System.out.println("Correct Octave");
+						}
+						else
+						{
+							score--;
+							System.out.println("Incorrect Octave");
+						}
+					}
+					else
+					{
+						score--;
+						System.out.println("Incorrect Note");
+					}
+				
+			
 			
 			}
-		}
-		else{
-			if( ( (inputT  - (nTimes[cnt]) ) >= -.10) ||  
-					( (inputT  + (nTimes[cnt]) ) >= .10) ||
-						( (nTimes[cnt]) - inputT <= -.10 ) ||
-							( (nTimes[cnt]) + inputT <= .10 )) {
+			else{
+				if( ( ( (inputT - startTime) - nTimes[cnt]) <= .50) && 
+						( (  (inputT - startTime) - nTimes[cnt] )  >= -.50) ){
+					score++;
+					System.out.println("Correct Note");
 				
+					if( uOct == nOct[cnt]){
+						score++;
+						System.out.println("Correct Octave");
+					}
+					else
+					{
+						score--;
+						System.out.println("Incorrect Octave");
+					}
+				}
+				else
+				{
+					score--;
+					System.out.println("Incorrect Octave");
+				}
 			}
 		}
 	}
@@ -86,6 +161,16 @@ public class FretLesson {
 		}//end if
 		
 		setNoteColor(inputT);
+		
+		if(finished == false){
+			if( notes[cnt].equals("Z")  ){
+				finished = true;
+			}
+			else{
+				finished = false;
+				
+			}
+		}
 		
 	}
 	
