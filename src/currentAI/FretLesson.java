@@ -13,6 +13,7 @@ public class FretLesson {
 	private int score = 0;
 	private boolean ringChecked = false;
 	private boolean nColor = false;
+	private double gracePeriod = .50;
 	
 	public FretLesson(double initTime, double [] noteT, String [] nVals, int [] octs, boolean [] ring)
 	{
@@ -117,8 +118,8 @@ public class FretLesson {
 			
 			}
 			else{
-				if( ( ( (inputT - startTime) - nTimes[cnt]) <= .50) && 
-						( (  (inputT - startTime) - nTimes[cnt] )  >= -.50) ){
+				if( ( ( (inputT - startTime) - nTimes[cnt]) <= gracePeriod) && 
+						( (  (inputT - startTime) - nTimes[cnt] )  >= -gracePeriod) ){
 					score++;
 					System.out.println("Correct Note");
 				
@@ -192,8 +193,8 @@ public class FretLesson {
 	
 	public void setNoteColor(double inputT){
 		
-		if( ( ( (inputT - startTime) - nTimes[cnt]) <= .50) && 
-				( ( (inputT - startTime) - nTimes[cnt] ) >= -.50) 
+		if( ( ( (inputT - startTime) - nTimes[cnt]) <= gracePeriod) && 
+				( ( (inputT - startTime) - nTimes[cnt] ) >= -gracePeriod) 
 					|| nRing[cnt] == true ){
 			nColor = true;
 		}
