@@ -16,13 +16,13 @@ class OscilloscopePanel extends JPanel{
 	float data[];
 	
 	public OscilloscopePanel(){
-		setMinimumSize(new Dimension(80,60)); 
+		setMaximumSize(new Dimension(1,1)); 
 	}
 	
 	public void paintComponent(Graphics g) {
         super.paintComponent(g); //paint background
         g.setColor(Color.BLACK);
-		g.fillRect(0, 0,getWidth(), getHeight());
+		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(Color.WHITE);
 		if(data != null){
 			float width = getWidth();

@@ -140,34 +140,6 @@ public class FretBoardPanel extends JPanel {
     	currentOctave = oct;
     }
     
-    public void setLesNoteVal(String noteV) {
-        lNoteVal = noteV;
-    }
-
-    public void setLesOctave(int oct)
-    {
-    	lOct = oct;
-    }
-    
-    public void setLesRing(boolean ring){
-    	lRing = ring;
-    }
-    
-    public void setLesColor(boolean lColor){
-    	
-    	if(lColor == true){
-    		lesColor = Color.GREEN;
-    	}
-    	else
-    	{
-    		lesColor = Color.BLUE;
-    	}
-    	
-    }
-    
-    public Color getLessonColor(){
-    	return lesColor;
-    }
     
     protected void paintComponent(Graphics g) {
         //super.paintComponent(g);       
@@ -419,7 +391,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH5, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //add label
                         g.setColor(Color.BLACK);
                         g.drawString("A", D_LABELWIDTH5, D_LABELHEIGHT3);
@@ -428,7 +399,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH6, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //add label
                         g.setColor(Color.BLACK);
                         g.drawString("Bb", D_LABELWIDTH6, D_LABELHEIGHT3);
@@ -437,7 +407,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH7, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //add label
                         g.setColor(Color.BLACK);
                         g.drawString("B", D_LABELWIDTH7, D_LABELHEIGHT3);
@@ -446,43 +415,34 @@ public class FretBoardPanel extends JPanel {
                         //mark notes with dot
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH8, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("C", D_LABELWIDTH8, D_LABELHEIGHT3);
-
                     } else if (noteVal == "C#") {
                         //mark notes with dot
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH9, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("C#", D_LABELWIDTH9, D_LABELHEIGHT3);
-
                     } else if (noteVal == "D") {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH10, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //label dot
                         g.setColor(Color.BLACK);
                         g.drawString("D", D_LABELWIDTH10, D_LABELHEIGHT3);
-
                     } else if (noteVal == "Eb") {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH11, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //label dot
                         g.setColor(Color.BLACK);
                         g.drawString("Eb", D_LABELWIDTH11, D_LABELHEIGHT3);
-
                     } else if (noteVal == "E") {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH0, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("E", D_LABELWIDTH0, D_LABELHEIGHT3);
@@ -491,25 +451,20 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH1, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("F", D_LABELWIDTH1, D_LABELHEIGHT3);
-
                     } else if (noteVal == "F#") {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH2, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("F#", D_LABELWIDTH2, D_LABELHEIGHT3);
-
                     } else if (noteVal == "G") {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH3, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("G", D_LABELWIDTH3, D_LABELHEIGHT3);
@@ -518,7 +473,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH4, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("G#", D_LABELWIDTH4, D_LABELHEIGHT3);
@@ -566,7 +520,6 @@ public class FretBoardPanel extends JPanel {
                     	//mark notes with dot
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH8, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("C", D_LABELWIDTH8, D_LABELHEIGHT3);
@@ -577,7 +530,6 @@ public class FretBoardPanel extends JPanel {
                         //mark notes with dot
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH9, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("C#", D_LABELWIDTH9, D_LABELHEIGHT3);
@@ -588,7 +540,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH10, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //label dot
                         g.setColor(Color.BLACK);
                         g.drawString("D", D_LABELWIDTH10, D_LABELHEIGHT3);
@@ -599,7 +550,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH11, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                         //label dot
                         g.setColor(Color.BLACK);
                         g.drawString("Eb", D_LABELWIDTH11, D_LABELHEIGHT3);
@@ -792,7 +742,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH7, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
-
                         //add label
                         g.setColor(Color.BLACK);
                         g.drawString("A", D_LABELWIDTH7, D_LABELHEIGHT1);
@@ -800,7 +749,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH8, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
-
                         //add label
                         g.setColor(Color.BLACK);
                         g.drawString("Bb", D_LABELWIDTH8, D_LABELHEIGHT1);
@@ -808,7 +756,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH9, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
-
                         //add label
                         g.setColor(Color.BLACK);
                         g.drawString("B", D_LABELWIDTH9, D_LABELHEIGHT1);
@@ -888,7 +835,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH5, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("G", D_LABELWIDTH5, D_LABELHEIGHT1);
@@ -897,7 +843,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH6, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("G#", D_LABELWIDTH6, D_LABELHEIGHT1);
@@ -914,7 +859,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH2, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                         //add label
                         g.setColor(Color.BLACK);
                         g.drawString("A", D_LABELWIDTH2, D_LABELHEIGHT0);
@@ -922,7 +866,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH3, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                         //add label
                         g.setColor(Color.BLACK);
                         g.drawString("Bb", D_LABELWIDTH3, D_LABELHEIGHT0);
@@ -930,7 +873,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH4, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                         //add label
                         g.setColor(Color.BLACK);
                         g.drawString("B", D_LABELWIDTH4, D_LABELHEIGHT0);
@@ -938,43 +880,34 @@ public class FretBoardPanel extends JPanel {
                         //mark notes with dot
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH5, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("C", D_LABELWIDTH5, D_LABELHEIGHT0);
-
                     } else if (noteVal == "C#") {
                         //mark notes with dot
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH6, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("C#", D_LABELWIDTH6, D_LABELHEIGHT0);
-
                     } else if (noteVal == "D") {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH7, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                         //label dot
                         g.setColor(Color.BLACK);
                         g.drawString("D", D_LABELWIDTH7, D_LABELHEIGHT0);
-
                     } else if (noteVal == "Eb") {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH8, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                         //label dot
                         g.setColor(Color.BLACK);
                         g.drawString("Eb", D_LABELWIDTH8, D_LABELHEIGHT0);
-
                     } else if (noteVal == "E") {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH9, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("E", D_LABELWIDTH9, D_LABELHEIGHT0);
@@ -982,25 +915,20 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH10, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("F", D_LABELWIDTH10, D_LABELHEIGHT0);
-
                     } else if (noteVal == "F#") {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH11, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("F#", D_LABELWIDTH11, D_LABELHEIGHT0);
-
                     } else if (noteVal == "G") {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH0, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("G", D_LABELWIDTH0, D_LABELHEIGHT0);
@@ -1009,7 +937,6 @@ public class FretBoardPanel extends JPanel {
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH1, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("G#", D_LABELWIDTH1, D_LABELHEIGHT0);
@@ -1020,6 +947,36 @@ public class FretBoardPanel extends JPanel {
             
         } //end paintNotes
     
+    
+    
+    public void setLesNoteVal(String noteV) {
+        lNoteVal = noteV;
+    }
+
+    public void setLesOctave(int oct)
+    {
+    	lOct = oct;
+    }
+    
+    public void setLesRing(boolean ring){
+    	lRing = ring;
+    }
+    
+    public void setLesColor(boolean lColor){
+    	
+    	if(lColor == true){
+    		lesColor = Color.GREEN;
+    	}
+    	else
+    	{
+    		lesColor = Color.BLUE;
+    	}
+    	
+    }
+    
+    public Color getLessonColor(){
+    	return lesColor;
+    }
     
     public void paintLessonNotes(Graphics g) {
 
@@ -1219,7 +1176,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH5, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //add label
                     g.setColor(Color.BLACK);
                     g.drawString("A", D_LABELWIDTH5, D_LABELHEIGHT3);
@@ -1228,7 +1184,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH6, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //add label
                     g.setColor(Color.BLACK);
                     g.drawString("Bb", D_LABELWIDTH6, D_LABELHEIGHT3);
@@ -1237,7 +1192,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH7, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //add label
                     g.setColor(Color.BLACK);
                     g.drawString("B", D_LABELWIDTH7, D_LABELHEIGHT3);
@@ -1246,43 +1200,34 @@ public class FretBoardPanel extends JPanel {
                     //mark notes with dot
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH8, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("C", D_LABELWIDTH8, D_LABELHEIGHT3);
-
                 } else if (lNoteVal == "C#") {
                     //mark notes with dot
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH9, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("C#", D_LABELWIDTH9, D_LABELHEIGHT3);
-
                 } else if (lNoteVal == "D") {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH10, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //label dot
                     g.setColor(Color.BLACK);
                     g.drawString("D", D_LABELWIDTH10, D_LABELHEIGHT3);
-
                 } else if (lNoteVal == "Eb") {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH11, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //label dot
                     g.setColor(Color.BLACK);
                     g.drawString("Eb", D_LABELWIDTH11, D_LABELHEIGHT3);
-
                 } else if (lNoteVal == "E") {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH0, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("E", D_LABELWIDTH0, D_LABELHEIGHT3);
@@ -1291,25 +1236,20 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH1, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("F", D_LABELWIDTH1, D_LABELHEIGHT3);
-
                 } else if (lNoteVal == "F#") {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH2, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("F#", D_LABELWIDTH2, D_LABELHEIGHT3);
-
                 } else if (lNoteVal == "G") {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH3, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("G", D_LABELWIDTH3, D_LABELHEIGHT3);
@@ -1318,7 +1258,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH4, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("G#", D_LABELWIDTH4, D_LABELHEIGHT3);
@@ -1366,7 +1305,6 @@ public class FretBoardPanel extends JPanel {
                 	//mark notes with dot
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH8, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("C", D_LABELWIDTH8, D_LABELHEIGHT3);
@@ -1377,7 +1315,6 @@ public class FretBoardPanel extends JPanel {
                     //mark notes with dot
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH9, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("C#", D_LABELWIDTH9, D_LABELHEIGHT3);
@@ -1388,7 +1325,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH10, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //label dot
                     g.setColor(Color.BLACK);
                     g.drawString("D", D_LABELWIDTH10, D_LABELHEIGHT3);
@@ -1399,7 +1335,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH11, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
                     //label dot
                     g.setColor(Color.BLACK);
                     g.drawString("Eb", D_LABELWIDTH11, D_LABELHEIGHT3);
@@ -1592,7 +1527,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH7, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
-
                     //add label
                     g.setColor(Color.BLACK);
                     g.drawString("A", D_LABELWIDTH7, D_LABELHEIGHT1);
@@ -1600,7 +1534,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH8, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
-
                     //add label
                     g.setColor(Color.BLACK);
                     g.drawString("Bb", D_LABELWIDTH8, D_LABELHEIGHT1);
@@ -1608,7 +1541,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH9, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
-
                     //add label
                     g.setColor(Color.BLACK);
                     g.drawString("B", D_LABELWIDTH9, D_LABELHEIGHT1);
@@ -1688,7 +1620,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH5, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("G", D_LABELWIDTH5, D_LABELHEIGHT1);
@@ -1697,7 +1628,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH6, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("G#", D_LABELWIDTH6, D_LABELHEIGHT1);
@@ -1713,7 +1643,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH2, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                     //add label
                     g.setColor(Color.BLACK);
                     g.drawString("A", D_LABELWIDTH2, D_LABELHEIGHT0);
@@ -1721,7 +1650,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH3, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                     //add label
                     g.setColor(Color.BLACK);
                     g.drawString("Bb", D_LABELWIDTH3, D_LABELHEIGHT0);
@@ -1729,7 +1657,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH4, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                     //add label
                     g.setColor(Color.BLACK);
                     g.drawString("B", D_LABELWIDTH4, D_LABELHEIGHT0);
@@ -1737,43 +1664,34 @@ public class FretBoardPanel extends JPanel {
                     //mark notes with dot
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH5, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("C", D_LABELWIDTH5, D_LABELHEIGHT0);
-
                 } else if (lNoteVal == "C#") {
                     //mark notes with dot
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH6, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("C#", D_LABELWIDTH6, D_LABELHEIGHT0);
-
                 } else if (lNoteVal == "D") {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH7, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                     //label dot
                     g.setColor(Color.BLACK);
                     g.drawString("D", D_LABELWIDTH7, D_LABELHEIGHT0);
-
                 } else if (lNoteVal == "Eb") {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH8, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                     //label dot
                     g.setColor(Color.BLACK);
                     g.drawString("Eb", D_LABELWIDTH8, D_LABELHEIGHT0);
-
                 } else if (lNoteVal == "E") {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH9, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("E", D_LABELWIDTH9, D_LABELHEIGHT0);
@@ -1781,25 +1699,20 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH10, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("F", D_LABELWIDTH10, D_LABELHEIGHT0);
-
                 } else if (lNoteVal == "F#") {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH11, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("F#", D_LABELWIDTH11, D_LABELHEIGHT0);
-
                 } else if (lNoteVal == "G") {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH0, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("G", D_LABELWIDTH0, D_LABELHEIGHT0);
@@ -1808,7 +1721,6 @@ public class FretBoardPanel extends JPanel {
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH1, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
-
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("G#", D_LABELWIDTH1, D_LABELHEIGHT0);

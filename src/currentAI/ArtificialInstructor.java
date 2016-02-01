@@ -95,13 +95,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 /*
  * Imports from this package
  */
 import currentAI.PlayBackThread;
 import currentAI.OscilloscopePanel;
-
+import currentAI.UpNextPanel;
 
 
 /*
@@ -127,6 +128,9 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 	private final int MIXERVAL = 1;				//mixer value in array to set(1 = microphone, 2 = line-in)
 	private final int BUTTON_WIDTH = 150;		//button width of 150 for all in "buttonsPanel"
 	private final int BUTTON_HEIGHT = 50;		//button height of 50 for all buttons in"buttonsPanel"
+	private final static int FRAME_WIDTH = 1200;
+	private final static int FRAME_HEIGHT = 800;
+	
 	
     /*
      * Global variables for pitch detection(PitchDetectionHandler) and oscilloscope(OscilloscopeEventHandler) 
@@ -159,16 +163,20 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     private int octave = 0;								//value to know where to display current note on fretboard	
     private double startTime = -1;						//to properly display time based on when user presses start, not when program loads			
     
+    private UpNextPanel upNext;
+    JPanel bottomP;
+    
     /*
      * Variables used to create a new lesson
      * 		**HARD CODED HERE FOR NOW, EVENTUALLY THEY WILL BE STORED SOMEWHERE ELSE AND ONLY READ IN
      * 		  WHEN THE PROGRAM HAS A SPECIFIC LESSON CALLED
      */
    // private double [] nTimes = {3.00, 6.00, 9.00, 12.00, 15.00, 18.00, 21.00, 14.00, 16.00};			//times to play notes at
-    private double [] nTimes = {1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00, 9.00};			//times to play notes at
-    private String [] nNotes = {"C", "F#", "Eb", "G", "D", "F", "G", "A", "Z"};					//value of notes 
-    private int [] nOcts = {2, 1, 2, 1, 2, 3, 1, 2, 0};										//octaves of notes
-    private boolean [] nRing = {false, true, false, true, false, true, false, true, false};
+    private double [] nTimes = {1.00, 5.00, 10.00, 12.00, 15.00, 20.00, 25.00};			//times to play notes at
+    private String [] nNotes = {"A", "B", "C","D", "E", "F", "Z"};					//value of notes 
+    private int [] nOcts = {1, 2, 2, 2, 1, 2, 3};										//octaves of notes
+    private boolean [] nRing = {true, false, true, false, true, false,false};
+    private double [] nGracePeriod = {0.5, 0.4, 0.3, 0.5, 0.4, 0.3, 1};
     private FretLesson lessonOne;															//Lesson object to store operate using data
 
     
@@ -191,6 +199,9 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
             if (startRecording == false) {
                 startRecording = true;
                 userPrompt = false;
+                upNext.resetLesson();
+                upNext.setNotes();
+                upNext.repaint();
             } else {
                 System.out.println("RECORDING ALREADY IN PROGRESS");
             }
@@ -213,6 +224,10 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                 startRecording = false;
                 userPrompt = false;
                 startTime = -1;
+                upNext.resetLesson();
+                upNext.setNotes();
+                upNext.repaint();
+                
             } else {
                 System.out.println("NO RECORDING IN PROGRESS TO STOP");
             }
@@ -233,7 +248,8 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
         public void actionPerformed(final ActionEvent e) {
             frame.add(tunerPanel);
             frame.remove(lPanel);
-            frame.remove(oPanel);
+            frame.remove(bottomP);
+            //frame.remove(upNext);
             frame.repaint();
             tunerP = true;
         }
@@ -253,7 +269,8 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
         public void actionPerformed(final ActionEvent e) {
             frame.remove(tunerPanel);
             frame.add(lPanel);
-            frame.add(oPanel);
+            frame.add(bottomP);
+           // frame.add(upNext);
             frame.repaint();
             tunerP = false;
         }
@@ -343,6 +360,14 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 
      
         oPanel = new OscilloscopePanel();	// Init the panel to be used to show the soundwave of input
+        upNext = new UpNextPanel(nNotes, nRing, nTimes, nOcts, nGracePeriod);
+        
+        
+        bottomP = new JPanel();
+        bottomP.setLayout(new GridLayout(1, 2));
+        bottomP.add(oPanel);
+        bottomP.add(upNext);
+      
         
         /*
          * 1) Init the TextArea object and dont allow users to edit 
@@ -492,8 +517,11 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
          * add panels to frame
          */
         add(lPanel);			//button panel and textarea
-        add(oPanel);		//panel to display sound wave
-
+        add(bottomP);		//panel to display sound wave
+        //add(oPanel);
+       
+        
+        //add(fretBoardPlayer);
     }
 
 
@@ -638,12 +666,15 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
             SwingUtilities.invokeAndWait(new Runnable() {
                 @Override
                 public void run() {
-                    frame = new ArtificialInstructor();		//initilize frame to have new object
-                    frame.pack();							//pack the frame
-                    frame.setSize(1200, 800);				//set the default size of the frame
-                    frame.setVisible(true);					//make visible to the user
+                    frame = new ArtificialInstructor();			//initilize frame to have new object
+                    frame.pack();								//pack the frame
+                    frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);	//set the default size of the frame
+                    frame.setResizable(false);
+                    frame.setVisible(true);						//make visible to the user
                 }
             });
+            
+           
         }
 
 
@@ -659,8 +690,12 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     	 */
     	if(startTime == -1 && startRecording == true) {
         	startTime = audioEvent.getTimeStamp();
-            lessonOne = new FretLesson(startTime, nTimes, nNotes, nOcts, nRing);
+            lessonOne = new FretLesson(startTime, nTimes, nNotes, nOcts, nRing, nGracePeriod);
             fretBoardPlayer.setNoteDisplayMode(allNotesOn);
+            
+            upNext.setCounter(lessonOne.getLesCounter());
+    		upNext.setDotColor(lessonOne.getNoteColor());
+    		upNext.repaint();
             //stopPressed = true;
         }
     	
@@ -671,6 +706,10 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     		fretBoardPlayer.setLesOctave(lessonOne.getNoteOct());
     		fretBoardPlayer.setLesColor(lessonOne.getNoteColor());
     		fretBoardPlayer.repaint(); 
+    		
+    		upNext.setCounter(lessonOne.getLesCounter());
+    		upNext.setDotColor(lessonOne.getNoteColor());
+    		upNext.repaint();
     	}
     	
     	/*
@@ -700,6 +739,8 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
             			startRecording = false;
             			startTime = -1;
             			lessonOne = null;
+            			
+            			upNext.lessonFinished();
             		}
             	}
             	
@@ -746,7 +787,10 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 	                    	fretBoardPlayer.setLesRing(lessonOne.getNoteRing());
 	                    	fretBoardPlayer.setLesColor(lessonOne.getNoteColor());
 	                    	fretBoardPlayer.repaint(); 
-	                        
+	                    	
+	                    	upNext.setCounter(lessonOne.getLesCounter());
+	                    	upNext.setDotColor(lessonOne.getNoteColor());
+	                		upNext.repaint();
 	                        
                         	/*
                         	 * Update the FretBoardPanel to include the user notes
@@ -776,10 +820,14 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                         	 * 		>repaint the frame
                         	 */
                             lessonOne.incrementCnt(audioEvent.getTimeStamp());
-                        	fretBoardPlayer.setLesNoteVal(lessonOne.getNoteValue());
+                            fretBoardPlayer.setLesNoteVal(lessonOne.getNoteValue());
 	                    	fretBoardPlayer.setLesRing(lessonOne.getNoteRing());
 	                    	fretBoardPlayer.setLesColor(lessonOne.getNoteColor());
                             fretBoardPlayer.repaint(); 
+                            
+                            upNext.setCounter(lessonOne.getLesCounter());
+                            upNext.setDotColor(lessonOne.getNoteColor());
+                    		upNext.repaint();
                             
                         	/*
                         	 * Update the FretBoardPanel to include the user notes
@@ -858,6 +906,16 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                 fretBoardPlayer.setLesRing(lessonOne.getNoteRing());
                 fretBoardPlayer.setLesColor(lessonOne.getNoteColor());
         		fretBoardPlayer.repaint(); 
+        		
+        		fretBoardPlayer.setNoteVal("Rest");
+        		fretBoardPlayer.setOctave(-100);		//-100 is the octave for rest
+        		fretBoardPlayer.repaint();
+        		
+        		
+        		upNext.setCounter(lessonOne.getLesCounter());
+        		upNext.setDotColor(lessonOne.getNoteColor());
+        		upNext.repaint();
+        		
         	}
         }
         
@@ -1057,11 +1115,11 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                 } //end inner-conditionals
 
             } else {
-                note = "couldnt be found";
+                note = "Note Could Note Be Recognized";
             } //end outer-conditionals
 
             return note;
 
         } //end getNoteValue()
 
-} //end Artifical Instructor
+}

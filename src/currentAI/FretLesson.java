@@ -5,6 +5,7 @@ public class FretLesson {
 	private double startTime; 
 	private double [] nTimes;
 	private String [] notes;
+	private double [] nGracePeriod;
 	private int [] nOct;
 	private boolean [] nRing;
 	private int cnt = 0;
@@ -13,15 +14,15 @@ public class FretLesson {
 	private int score = 0;
 	private boolean ringChecked = false;
 	private boolean nColor = false;
-	private double gracePeriod = .50;
 	
-	public FretLesson(double initTime, double [] noteT, String [] nVals, int [] octs, boolean [] ring)
+	public FretLesson(double initTime, double [] noteT, String [] nVals, int [] octs, boolean [] ring, double [] graceP)
 	{
 		startTime = initTime;
 		nTimes = noteT;
 		notes = nVals;
 		nOct = octs;
 		nRing = ring;
+		nGracePeriod = graceP;
 		cnt = 0;
 		score = 0;
 	}
@@ -31,18 +32,7 @@ public class FretLesson {
 		startTime = inputT;
 	}
 	
-	public void lessonStop(double inputT){
-		
-		incrementCnt(inputT);
-		
-		if( notes[cnt].equals("Z")  ){
-			finished = true;
-		}
-		else{
-			finished = false;
-			
-		}
-	}
+	
 	
 	public boolean getLessonPlace(double inputT){
 		boolean isfinished;
@@ -83,6 +73,10 @@ public class FretLesson {
 		score--;
 	}
 	
+	public int getLesCounter(){
+		return cnt;
+	}
+	
 	/*
 	 * FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX
 	 */
@@ -118,8 +112,8 @@ public class FretLesson {
 			
 			}
 			else{
-				if( ( ( (inputT - startTime) - nTimes[cnt]) <= gracePeriod) && 
-						( (  (inputT - startTime) - nTimes[cnt] )  >= -gracePeriod) ){
+				if( ( ( (inputT - startTime) - nTimes[cnt]) <= .50) && 
+						( (  (inputT - startTime) - nTimes[cnt] )  >= -.50) ){
 					score++;
 					System.out.println("Correct Note");
 				
@@ -193,8 +187,8 @@ public class FretLesson {
 	
 	public void setNoteColor(double inputT){
 		
-		if( ( ( (inputT - startTime) - nTimes[cnt]) <= gracePeriod) && 
-				( ( (inputT - startTime) - nTimes[cnt] ) >= -gracePeriod) 
+		if( ( ( (inputT - startTime) - nTimes[cnt]) <= nGracePeriod[cnt]) && 
+				( ( (inputT - startTime) - nTimes[cnt] ) >= -nGracePeriod[cnt]) 
 					|| nRing[cnt] == true ){
 			nColor = true;
 		}
@@ -210,3 +204,4 @@ public class FretLesson {
 	
 	
 }
+
