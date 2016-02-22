@@ -11,7 +11,7 @@ public class FretLesson {
 	private int cnt = 0;
 	private boolean finished = false;
 	private boolean locked = false;
-	private int score = 0;
+	private double score = 0;
 	private boolean ringChecked = false;
 	private boolean nColor = false;
 	
@@ -30,10 +30,71 @@ public class FretLesson {
 	public void setStartTime(double inputT)
 	{
 		startTime = inputT;
-	}
+	}//end setStartTime()
+	
+	/*
+	 * 	Using the global counter this returns the current note value
+	 */
+	public String getNoteValue()
+	{
+		return notes[cnt];
+	}//end getNoteValue()
 	
 	
+	/*
+	 *	 Using the global counter this returns the current octave value
+	 */
+	public int getNoteOct()
+	{
+		return nOct[cnt];
+	}//end getNoteOct()
 	
+	
+	/*
+	 * Using the global counter this returns the current ring value
+	 */
+	public boolean getNoteRing()
+	{
+		return nRing[cnt];
+	}//end getNoteRing()
+	
+	
+	/*
+	 * This method takes in the input time and determiens if the current note is 
+	 * 		within the GracePeriod
+	 * 
+	 * 		If it is within the GracePeriod then COLOR is GREEN
+	 * 		ELSE the COLOR is BLUE
+	 */
+	public void setNoteColor(double inputT){
+		
+		if( ( ( (inputT - startTime) - nTimes[cnt]) <= nGracePeriod[cnt]) && 
+				( ( (inputT - startTime) - nTimes[cnt] ) >= -nGracePeriod[cnt]) 
+					|| nRing[cnt] == true ){
+			nColor = true;
+		}
+		else
+		{
+			nColor = false;
+		}
+	}//end setNoteColor()
+	
+	/*
+	 * Returns the color value that is currently set
+	 */
+	public boolean getNoteColor(){
+		return nColor;
+	}//end getNoteColor()
+	
+	
+	/*
+	 * Taking in the current time in the lesson, it determines if the lesson has been completed
+	 * 
+	 * 	If the current note value is equal to "Z" lesson has been completed
+	 * 		set global variable to track progress to true
+	 * 
+	 * Returns the current state of the lesson
+	 */
 	public boolean getLessonPlace(double inputT){
 		boolean isfinished;
 		
@@ -55,93 +116,146 @@ public class FretLesson {
 		}
 		
 		return isfinished;
-	}
+		
+	}//end getLessonPlace()
 	
-	public int getScore(){
-		return score;
-	}
-	
-	public void setLessonPlace(){
-		cnt = 0;
-	}
-	
-	public void incrementScore(){
-		score++;
-	}
-	
-	public void decrementScore(){
-		score--;
-	}
-	
-	public int getLesCounter(){
-		return cnt;
-	}
 	
 	/*
-	 * FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX FIX
+	 * Returns the value of the global variable score
 	 */
-	public void checkAccuracy(double inputT, String uNote, int uOct){
+	public double getScore(){
+		return score;
+	}//end getScore()
+	
+	
+	/*
+	 * Increments the global variable score by number passed in
+	 */
+	public void incrementScore(double num){
+		score += num;
+	}//end incrementScore()
+	
+	
+	/*
+	 * Decrements the global variable score by number passed in
+	 */
+	public void decrementScore(double num){
+		score -= num;
+	}//end decrementScore()
+	
+	
+	/*
+	 * Returns the global variable cnt
+	 */
+	public int getLesCounter(){
+		return cnt;
+	}//end getLesCounter()
+	
+	/*
+	 * Takes in the current time, the note value of user input, and the octave value of user input
+	 * 
+	 * Determines a score based off of a series of conditionals
+	 */
+	public void checkNoteAccuracy(double inputT, String uNote, int uOct){
 		
-		if(finished == false){
-			
-		
-			if(nRing[cnt] == true){
+		/*
+		 * If the note is supposed to be strummed and left to be rung out
+		 */
+		if(nRing[cnt] == true){
 				
+			/*
+			 * IF the program has not checked for input of a "RINGED NOTE" and it is within the grace period
+			 */
+			if(ringChecked == false && (inputT-startTime) >= nGracePeriod[cnt] && (inputT-startTime) <= nGracePeriod[cnt])
+			{
 				
-					if( uNote == notes[cnt] ){
-						score++;
-						System.out.println("Correct Note");
+				if( uNote == notes[cnt] ){
+					incrementScore(1);
 					
+					if( uNote.equals("NO INPUT") == false )
+					{
 						if( uOct == nOct[cnt]){
-							score++;
-							System.out.println("Correct Octave");
+							incrementScore(1);
 						}
 						else
 						{
-							score--;
-							System.out.println("Incorrect Octave");
+							decrementScore(1);
 						}
-					}
-					else
-					{
-						score--;
-						System.out.println("Incorrect Note");
-					}
-				
-			
-			
-			}
-			else{
-				if( ( ( (inputT - startTime) - nTimes[cnt]) <= .50) && 
-						( (  (inputT - startTime) - nTimes[cnt] )  >= -.50) ){
-					score++;
-					System.out.println("Correct Note");
-				
-					if( uOct == nOct[cnt]){
-						score++;
-						System.out.println("Correct Octave");
-					}
-					else
-					{
-						score--;
-						System.out.println("Incorrect Octave");
 					}
 				}
 				else
 				{
-					score--;
-					System.out.println("Incorrect Octave");
+					decrementScore(1);
+				}
+				
+				ringChecked = true;
+			}
+			else
+			{
+				if( uNote == notes[cnt] ){
+					incrementScore(0.5);
+					
+					if( uNote.equals("NO INPUT") == false )
+					{
+						if( uOct == nOct[cnt]){
+							incrementScore(0.5);
+						}
+						else
+						{
+							decrementScore(1);
+						}
+					}
+				}
+				else
+				{
+					decrementScore(1);
 				}
 			}
+			
 		}
-	}
+		else{
+			/*
+			 * Else note is not meant to be left to ring out, check if played within correct GracePeriod
+			 */
+			if( ( ( (inputT - startTime) - nTimes[cnt]) <= nGracePeriod[cnt]) && 
+						( (  (inputT - startTime) - nTimes[cnt] )  >= -nGracePeriod[cnt]) ){
+				incrementScore(1);
+				
+				if( uNote.equals("NO INPUT") == false )
+				{
+					if( uOct == nOct[cnt]){
+						incrementScore(2);
+					}
+					else
+					{
+						decrementScore(1);
+					}
+				}
+			}
+			else
+			{
+				decrementScore(1);
+			}
+		}
+	}//end checkNoteAcurracy()	
 	
+	
+	public void checkRhythmAccuracy(double inputT, double distacnce){
+		
+	}//end checkRhythmAccuracy()
+	
+	/*
+	 * Increments the global variable cnt based on the current time
+	 * 
+	 * looks at the lesson times to determine where in the lesson the user is
+	 */
 	public void incrementCnt(double inputT)
 	{
 		
 		double currentT = inputT - startTime;
 		
 		if(currentT > nTimes[cnt]){
+			
 			if(cnt != nTimes.length - 1)
 			{
 				cnt++;
@@ -149,11 +263,11 @@ public class FretLesson {
 			}
 			else{
 				cnt = 0;
-			}
+			}//end check for end
 			
 			ringChecked = false;
 			
-		}//end if
+		}//end if greater
 		
 		setNoteColor(inputT);
 		
@@ -163,45 +277,13 @@ public class FretLesson {
 			}
 			else{
 				finished = false;
-				
 			}
-		}
+		}//end check for completion
 		
-	}
-	
-	//returns the note 
-	public String getNoteValue()
-	{
-		return notes[cnt];
-	}
-	
-	public int getNoteOct()
-	{
-		return nOct[cnt];
-	}
-	
-	public boolean getNoteRing()
-	{
-		return nRing[cnt];
-	}
-	
-	public void setNoteColor(double inputT){
-		
-		if( ( ( (inputT - startTime) - nTimes[cnt]) <= nGracePeriod[cnt]) && 
-				( ( (inputT - startTime) - nTimes[cnt] ) >= -nGracePeriod[cnt]) 
-					|| nRing[cnt] == true ){
-			nColor = true;
-		}
-		else
-		{
-			nColor = false;
-		}
-	}
-	
-	public boolean getNoteColor(){
-		return nColor;
-	}
+	}//end incrementCnt()
+
 	
 	
-}
+}//end class
+
 

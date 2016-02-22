@@ -1,5 +1,6 @@
 package currentAI;
 
+
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Font;
@@ -27,34 +28,25 @@ public class UpNextPanel extends JPanel {
      * 		2 = 3rd from top
      * 		4 = LOWEST STRING
      */
-    private final int D_LABELHEIGHT0 = 112 - 25;
-    private final int D_LABELHEIGHT1 = 162- 25;
-    private final int D_LABELHEIGHT2 = 212-25;
-    private final int D_LABELHEIGHT3 = 262-25;
+    private final int D_LABELHEIGHT0 = 112 - 20;
+    private final int D_LABELHEIGHT1 = 162- 20;
+    private final int D_LABELHEIGHT2 = 212-20;
+    private final int D_LABELHEIGHT3 = 262-20;
     
-    private final int NOTE_NUMBER_1 = 0;
-    private final int NOTE_NUMBER_2 = 0;
-    private final int NOTE_NUMBER_3 = 0;
-    private final int NOTE_NUMBER_4 = 0;
-    private final int NOTE_NUMBER_5 = 0;
     
     private final int NEXT_LINES_1 = CORNERFRETBOARD + 180 ;
     private final int NEXT_LINES_2 = CORNERFRETBOARD + 180*2 ;
     private final int NEXT_LINES_3 = CORNERFRETBOARD + 180*3 ;
     //private final int NEXT_LINES_6 = 950;
     
-    private final int NEXT_LABELS_1 = 140 - 25;
-    private final int NEXT_LABELS_2 = 320 - 25;
-    private final int NEXT_LABELS_3 = 500 - 25;
-    private final int NEXT_LABELS_4 = 680 - 25;
     
     private final int DOTWIDTH0 = 130 - 25;
     private final int DOTWIDTH1 = 310 - 25;
     private final int DOTWIDTH2 = 490 - 25;
     
-    private final int D_LABELWIDTH0 = DOTWIDTH0 + 12;
-    private final int D_LABELWIDTH1 = DOTWIDTH1 + 12;
-    private final int D_LABELWIDTH2 = DOTWIDTH2 + 12;
+    private final int D_LABELWIDTH0 = DOTWIDTH0 + 7;
+    private final int D_LABELWIDTH1 = DOTWIDTH1 + 7;
+    private final int D_LABELWIDTH2 = DOTWIDTH2 + 7;
     
     private final int DOTHEIGHT0 = 85 - 25;
     private final int DOTHEIGHT1 = 135 - 25;
@@ -67,15 +59,17 @@ public class UpNextPanel extends JPanel {
      * Variables 
      */
     private int currentCnt;
-    private final String [] nVals;
-    private String firstNote, secondNote, thirdNote, fourthNote;
-    private int firstOct, secondOct, thirdOct, fourthOct;
-    private final boolean [] nRing;
-    private final double [] nTimes;
-    private final int [] nOcts;
+    private String [] nVals;
+    private String secondNote, thirdNote, fourthNote;
+    private int secondOct, thirdOct, fourthOct;
+    private boolean [] nRing;
+    private double [] nTimes;
+    private int [] nOcts;
     private double [] nGracePeriod;
     private Color dotColor = Color.BLUE;
     private boolean lessonFinished = false;
+    double timeUntil1, timeUntil2, timeUntil3;
+    
     
     //Class constructor
     public UpNextPanel( String [] vals, boolean [] rings, double [] times, int [] octs, double [] graceP) {
@@ -86,14 +80,45 @@ public class UpNextPanel extends JPanel {
     	nGracePeriod = graceP;
     	currentCnt = 0;
     	secondNote = nVals[0];
-    	thirdNote = nVals[1];
-    	fourthNote = nVals[2];
     	secondOct = nOcts[0];
-    	thirdOct = nOcts[1];
-    	fourthOct = nOcts[2];
     	
-    }
+    	if(nVals.length > 1){
+    		thirdNote = nVals[1];
+    		thirdOct = nOcts[1];
+    		
+    		if(nVals.length > 2){
+    	    	fourthNote = nVals[2];
+    	    	fourthOct = nOcts[2];
+    		}
+    	}//end if
+    	
+    }//end constructor
 
+    public void assignNotes(String [] notes)
+    {
+    	nVals = notes;
+    }
+    
+    public void assignTimes(double [] times)
+    {
+    	nTimes = times;
+    }
+    
+    public void assignRing(boolean [] rings)
+    {
+    	nRing = rings;
+    }
+    
+    public void assignOcts(int [] octs)
+    {
+    	nOcts = octs;
+    }
+    
+    public void assignGP(double [] gracePeriod)
+    {
+    	nGracePeriod = gracePeriod;
+    }
+    
     //Setter method for global counter
     public void setCounter(int cnt){
     	currentCnt = cnt;
@@ -159,7 +184,8 @@ public class UpNextPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         //super.paintComponent(g);       
     	 g.setFont(new Font("Times New Roman Bold", 25, 25));
-
+    	 g.setFont(g.getFont().deriveFont(Font.BOLD, g.getFont().getSize()+7));
+    	 
          //Fill rectangle for FretBoard
          g.setColor(Color.WHITE);
          g.fillRect(CORNERFRETBOARD, CORNERFRETBOARD, WIDTHFRETBOARD, HEIGHTFRETBOARD);
@@ -190,11 +216,31 @@ public class UpNextPanel extends JPanel {
          
 
          
-         g.drawString("Current", 100 - 25, 350 - 25);
-         g.drawString("Next", 280 - 25, 350 - 25);
-         g.drawString("2 Away", 460 - 25, 350 - 25);
+         g.drawString("Current", 100 - 55, 350 - 45);
+         g.drawString("Next", 280 - 35, 350 - 45);
+         g.drawString("2 Away", 460 - 35, 350 - 45);
          
-       
+         //Draw the times until the next notes
+         if(timeUntil1 != -1)
+         {
+        	 if(timeUntil1 <= nGracePeriod[currentCnt]){
+        		 g.setColor(Color.GREEN);
+        		 g.drawString(Double.toString(timeUntil1) , 100 - 25, 350 - 15);
+        		 g.setColor(Color.BLACK);
+        	 }
+        	 else
+        	 {
+        		 g.drawString(Double.toString(timeUntil1) , 100 - 25, 350 - 15);
+        	 }
+         } 
+         if(timeUntil2 != -1)
+         {
+        	 g.drawString(Double.toString(timeUntil2), 280 - 25, 350 - 15);
+         }
+         if(timeUntil3 != -1)
+         {
+        	 g.drawString(Double.toString(timeUntil3), 460 - 25, 350 - 15);
+         }
          
          
          if(lessonFinished == false)
@@ -210,7 +256,6 @@ public class UpNextPanel extends JPanel {
         	 {
         	 
         		 DOT_HEIGHT = assignDotHeight(heights1[i]);
-        		 System.out.println(DOT_HEIGHT + "  " + secondNote);
         		 dotColor = getDotColor();
         	 
         		 if( heights1[i] != -1)
@@ -220,6 +265,8 @@ public class UpNextPanel extends JPanel {
         	 
         			 g.setColor(Color.BLACK);
         			 g.drawString(secondNote, D_LABELWIDTH0, DOT_HEIGHT + 27);
+        			 
+        			 
         		 }
         		 DOT_HEIGHT = -1;
         	 
@@ -234,7 +281,6 @@ public class UpNextPanel extends JPanel {
         	 for( i = 0; i < heights2.length; i++)
         	 {
         		 DOT_HEIGHT = assignDotHeight(heights2[i]);
-        		 System.out.println(DOT_HEIGHT + "  " + thirdNote);
         		 dotColor = getDotColor();
         	 
         		 if( heights2[i] != -1 )
@@ -257,7 +303,6 @@ public class UpNextPanel extends JPanel {
         	 for( i = 0; i < heights3.length; i++)
         	 {
         		 DOT_HEIGHT = assignDotHeight(heights3[i]);
-        		 System.out.println(DOT_HEIGHT + "  " + fourthNote);
         		 dotColor = getDotColor();
         	 
         		 if( heights3[i] != -1)
@@ -309,14 +354,14 @@ public class UpNextPanel extends JPanel {
     	
     	if(octave == 1 )
     	{
-    		if(note == "A" || note == "A#" || note == "B")
+    		if(note.equals("A") || note.equals("A#") || note.equals("B"))
     		{
     			retVal[0] = 3;
     			retVal[1] = 2;
     			retVal[2] = -1;
     		}
-    		else if(note == "C" || note == "C#" || note == "D" || note =="D#" || note == "E" || 
-    					note == "F" || note == "F#" || note == "G" || note == "G#")
+    		else if(note.equals("C") || note.equals("C#") || note.equals("D") || note.equals("D#") || note.equals("E") || 
+    					note.equals("F") || note.equals("F#") || note.equals("G") || note.equals("G#"))
     		{
     			retVal[0] = 3;
     			retVal[1] = -1;
@@ -331,40 +376,34 @@ public class UpNextPanel extends JPanel {
     	}
     	else if( octave == 2)
     	{
-    		if(note == "C" || note == "C#")
+    		if(note.equals("C") || note.equals("C#"))
     		{
     			retVal[0] = 3;
     			retVal[1] = 2;
     			retVal[2] = -1;
     		}
-    		else if(note == "A" || note == "A#" || note == "B")
+    		else if(note.equals("A") || note.equals("A#") || note.equals("B"))
     		{
     			retVal[0] = 1;
     			retVal[1] = 0;
     			retVal[2] = -1;
     		}
-    		else if(note == "D" || note == "D#")
+    		else if(note.equals("D") || note.equals("D#"))
     		{
     			retVal[0] = 3;
     			retVal[1] = 2;
     			retVal[2] = 1;
     		}
-    		else if(note == "G" || note == "G#")
+    		else if(note.equals("G") || note.equals("G#"))
     		{
     			retVal[0] = 2;
     			retVal[1] = 1;
     			retVal[2] = 0;
     		}
-    		else if(note == "E" || note == "F" || note == "F#")
+    		else if(note.equals("E") || note.equals("F") || note.equals("F#"))
     		{
     			retVal[0] = 2;
     			retVal[1] = 1;
-    			retVal[2] = -1;
-    		}
-    		else if(note == "")
-    		{
-    			retVal[0] = -1;
-    			retVal[1] = -1;
     			retVal[2] = -1;
     		}
     		else
@@ -376,13 +415,13 @@ public class UpNextPanel extends JPanel {
     	}
     	else if( octave == 3)
     	{
-    		if(note == "C" || note == "C#")
+    		if(note.equals("C") || note.equals("C#"))
     		{
     			retVal[0] = 1;
     			retVal[1] = 0;
     			retVal[2] = -1;
     		}
-    		else if(note == "D" || note =="D#" || note == "E" || note == "F" || note == "F#")
+    		else if(note.equals("D") || note.equals("D#") || note.equals("E") || note.equals("F") || note.equals("F#"))
     		{
     			retVal[0] = 1;
     			retVal[1] = -1;
@@ -395,8 +434,9 @@ public class UpNextPanel extends JPanel {
     			retVal[2] = -1;
     		}
     	}
-    	else if( octave == -1 || note == "")
+    	else if( octave == -1 || note.equals(""))
     	{
+    		
     		retVal[0] = -1;
     		retVal[1] = -1;
 			retVal[2] = -1;
@@ -421,5 +461,44 @@ public class UpNextPanel extends JPanel {
     	return dotColor;
     }
    
+    public void setTimeUntil(double currentTime, double startTime){
+    	if( startTime != -1)
+    	{
+    		if(currentCnt < nTimes.length - 1)
+    		{
+    			timeUntil1 = nTimes[currentCnt] - (currentTime - startTime);
+    		
+    			if(currentCnt + 1 < nTimes.length -1)
+    			{
+    				timeUntil2 = nTimes[currentCnt + 1] - (currentTime - startTime);
+    				
+    				if(currentCnt + 2 < nTimes.length-1)
+    				{
+    					timeUntil3 = nTimes[currentCnt + 2] - (currentTime - startTime);
+    				}
+    				else
+    				{
+    					timeUntil3 = -1;
+    				}//end fourth layer conditional
+    			}
+    			else
+    			{
+    				timeUntil2 = -1;
+    				timeUntil3 = -1;
+    			}//end third layer conditional
+    			
+    		}//end second layer conditional
+    	}
+    	else
+    	{
+    		timeUntil1 = -1;
+    		timeUntil2 = -1;
+    		timeUntil3 = -1;
+    	}//end outer conditional
+    }
+    
+    
 } //end class
+
+
 

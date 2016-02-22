@@ -10,9 +10,13 @@ public class FretBoardPanel extends JPanel {
 
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4139798146217404624L;
+	/**
      * 
      */
-    private static final long serialVersionUID = 1L;
+   
 
     /*
      * Default sizing variables 
@@ -65,18 +69,18 @@ public class FretBoardPanel extends JPanel {
      * 			0 = open fret
      * 			1-11 = that fret number
      */
-    private final int D_LABELWIDTH0 = DOTWIDTH0 + 12;
-    private final int D_LABELWIDTH1 = DOTWIDTH1 + 12;
-    private final int D_LABELWIDTH2 = DOTWIDTH2 + 12;
-    private final int D_LABELWIDTH3 = DOTWIDTH3 + 12;
-    private final int D_LABELWIDTH4 = DOTWIDTH4 + 12;
-    private final int D_LABELWIDTH5 = DOTWIDTH5 + 12;
-    private final int D_LABELWIDTH6 = DOTWIDTH6 + 12;
-    private final int D_LABELWIDTH7 = DOTWIDTH7 + 12;
-    private final int D_LABELWIDTH8 = DOTWIDTH8 + 12;
-    private final int D_LABELWIDTH9 = DOTWIDTH9 + 12;
-    private final int D_LABELWIDTH10 = DOTWIDTH10 + 12;
-    private final int D_LABELWIDTH11 = DOTWIDTH11 + 12;
+    private final int D_LABELWIDTH0 = DOTWIDTH0 + 10;
+    private final int D_LABELWIDTH1 = DOTWIDTH1 + 10;
+    private final int D_LABELWIDTH2 = DOTWIDTH2 + 10;
+    private final int D_LABELWIDTH3 = DOTWIDTH3 + 10;
+    private final int D_LABELWIDTH4 = DOTWIDTH4 + 10;
+    private final int D_LABELWIDTH5 = DOTWIDTH5 + 10;
+    private final int D_LABELWIDTH6 = DOTWIDTH6 + 10;
+    private final int D_LABELWIDTH7 = DOTWIDTH7 + 10;
+    private final int D_LABELWIDTH8 = DOTWIDTH8 + 10;
+    private final int D_LABELWIDTH9 = DOTWIDTH9 + 10;
+    private final int D_LABELWIDTH10 = DOTWIDTH10 + 10;
+    private final int D_LABELWIDTH11 = DOTWIDTH11 + 10;
 
     /*
      * Constants for height of panel to set the dot to start at
@@ -85,10 +89,10 @@ public class FretBoardPanel extends JPanel {
      * 		2 = 3rd from top
      * 		4 = LOWEST STRING
      */
-    private final int DOTHEIGHT0 = 85;
-    private final int DOTHEIGHT1 = 135;
-    private final int DOTHEIGHT2 = 185;
-    private final int DOTHEIGHT3 = 235;
+    private final int DOTHEIGHT0 = 75;
+    private final int DOTHEIGHT1 = 125;
+    private final int DOTHEIGHT2 = 175;
+    private final int DOTHEIGHT3 = 225;
 
     /*
      * Constants for height of panel to set the label of dot to start at
@@ -97,15 +101,15 @@ public class FretBoardPanel extends JPanel {
      * 		2 = 3rd from top
      * 		4 = LOWEST STRING
      */
-    private final int D_LABELHEIGHT0 = 112;
-    private final int D_LABELHEIGHT1 = 162;
-    private final int D_LABELHEIGHT2 = 212;
-    private final int D_LABELHEIGHT3 = 262;
+    private final int D_LABELHEIGHT0 = 110;
+    private final int D_LABELHEIGHT1 = 160;
+    private final int D_LABELHEIGHT2 = 210;
+    private final int D_LABELHEIGHT3 = 260;
 
     /*
      * Radius of all dots
      */
-    private final int DOT_RADIUS = 40;
+    private final int DOT_RADIUS = 50;
 
     /*
      * Variables to be change values of fretboard GUI that may be updated
@@ -140,36 +144,40 @@ public class FretBoardPanel extends JPanel {
     	currentOctave = oct;
     }
     
-    
-    protected void paintComponent(Graphics g) {
-        //super.paintComponent(g);       
+    public void resetFretBoard(Graphics g)
+    {
+    	g.setFont(new Font("Times New Roman Bold", 25, 25));
 
-        g.setFont(new Font("Times New Roman Bold", 25, 25));
-
+        g.setFont(g.getFont().deriveFont(Font.BOLD, g.getFont().getSize()+6));
+        
         //Fill rectangle for FretBoard
         g.setColor(Color.WHITE);
         g.fillRect(CORNERFRETBOARD, CORNERFRETBOARD, WIDTHFRETBOARD, HEIGHTFRETBOARD);
 
-        //Draw rectangle for FretBoard
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(CORNERFRETBOARD, CORNERFRETBOARD, SX_FRET0 - CORNERFRETBOARD, HEIGHTFRETBOARD);
+        
+      //Draw rectangle for FretBoard
         g.setColor(Color.BLACK);
         g.drawRect(CORNERFRETBOARD, CORNERFRETBOARD, WIDTHFRETBOARD, HEIGHTFRETBOARD);
 
+        g.setColor(Color.BLACK);
         //draw frets
-        g.drawLine(SX_FRET0, CORNERFRETBOARD, SX_FRET0, HEIGHTFRETBOARD + CORNERFRETBOARD);
-        g.drawLine(SX_FRET1, CORNERFRETBOARD, SX_FRET1, HEIGHTFRETBOARD + CORNERFRETBOARD);
-        g.drawLine(SX_FRET2, CORNERFRETBOARD, SX_FRET2, HEIGHTFRETBOARD + CORNERFRETBOARD);
-        g.drawLine(SX_FRET3, CORNERFRETBOARD, SX_FRET3, HEIGHTFRETBOARD + CORNERFRETBOARD);
-        g.drawLine(SX_FRET4, CORNERFRETBOARD, SX_FRET4, HEIGHTFRETBOARD + CORNERFRETBOARD);
-        g.drawLine(SX_FRET5, CORNERFRETBOARD, SX_FRET5, HEIGHTFRETBOARD + CORNERFRETBOARD);
-        g.drawLine(SX_FRET6, CORNERFRETBOARD, SX_FRET6, HEIGHTFRETBOARD + CORNERFRETBOARD);
-        g.drawLine(SX_FRET7, CORNERFRETBOARD, SX_FRET7, HEIGHTFRETBOARD + CORNERFRETBOARD);
-        g.drawLine(SX_FRET8, CORNERFRETBOARD, SX_FRET8, HEIGHTFRETBOARD + CORNERFRETBOARD);
-        g.drawLine(SX_FRET9, CORNERFRETBOARD, SX_FRET9, HEIGHTFRETBOARD + CORNERFRETBOARD);
-        g.drawLine(SX_FRET10, CORNERFRETBOARD, SX_FRET10, HEIGHTFRETBOARD + CORNERFRETBOARD);
-        g.drawLine(SX_FRET11, CORNERFRETBOARD, SX_FRET11, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET0, CORNERFRETBOARD - 30, SX_FRET0, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET1, CORNERFRETBOARD - 30, SX_FRET1, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET2, CORNERFRETBOARD - 30, SX_FRET2, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET3, CORNERFRETBOARD - 30, SX_FRET3, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET4, CORNERFRETBOARD - 30, SX_FRET4, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET5, CORNERFRETBOARD - 30, SX_FRET5, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET6, CORNERFRETBOARD - 30, SX_FRET6, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET7, CORNERFRETBOARD - 30, SX_FRET7, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET8, CORNERFRETBOARD - 30, SX_FRET8, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET9, CORNERFRETBOARD - 30, SX_FRET9, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET10, CORNERFRETBOARD - 30, SX_FRET10, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET11, CORNERFRETBOARD - 30, SX_FRET11, HEIGHTFRETBOARD + CORNERFRETBOARD);
 
         //label frets
-        g.drawString("Open", 50, 35);
+        g.drawString("Open", 40, 35);
         g.drawString("1", 150, 35);
         g.drawString("2", 225, 35);
         g.drawString("3", 300, 35);
@@ -182,6 +190,7 @@ public class FretBoardPanel extends JPanel {
         g.drawString("10", 825, 35);
         g.drawString("11", 900, 35);
 
+        
         //Draw strings on fretboard 
         g.drawLine(35, 100, 965, 100);
         g.drawLine(35, 150, 965, 150);
@@ -194,6 +203,128 @@ public class FretBoardPanel extends JPanel {
         g.drawString("A", 15, D_LABELHEIGHT2);
         g.drawString("E", 15, D_LABELHEIGHT3);
 
+        //draw fret markers
+        g.setColor(Color.GRAY);
+        g.fillOval( (SX_FRET0 + SX_FRET1)/2 - 8, D_LABELHEIGHT1 -5, 25, 35);
+        g.fillOval( (SX_FRET2 + SX_FRET3)/2 - 8, D_LABELHEIGHT1 -5, 25, 35);
+        g.fillOval( (SX_FRET4 + SX_FRET5)/2 - 8, D_LABELHEIGHT1 -5, 25, 35);
+        g.fillOval( (SX_FRET6 + SX_FRET7)/2 - 8, D_LABELHEIGHT1 - 5, 25, 35);
+        g.fillOval( (SX_FRET8 + SX_FRET9)/2 - 8, D_LABELHEIGHT1 - 5, 25, 35);
+        
+        //add outline to fret markers
+        g.setColor(Color.CYAN);
+        g.drawOval( (SX_FRET0 + SX_FRET1)/2 - 8, D_LABELHEIGHT1 -5, 25, 35);
+        g.drawOval( (SX_FRET2 + SX_FRET3)/2 - 8, D_LABELHEIGHT1 -5, 25, 35);
+        g.drawOval( (SX_FRET4 + SX_FRET5)/2 - 8, D_LABELHEIGHT1 -5, 25, 35);
+        g.drawOval( (SX_FRET6 + SX_FRET7)/2 - 8, D_LABELHEIGHT1 - 5, 25, 35);
+        g.drawOval( (SX_FRET8 + SX_FRET9)/2 - 8, D_LABELHEIGHT1 - 5, 25, 35);
+        
+        g.drawOval( (SX_FRET0 + SX_FRET1)/2-3, D_LABELHEIGHT1, 15, 25);
+        g.drawOval( (SX_FRET2 + SX_FRET3)/2-3, D_LABELHEIGHT1, 15, 25);
+        g.drawOval( (SX_FRET4 + SX_FRET5)/2-3, D_LABELHEIGHT1, 15, 25);
+        g.drawOval( (SX_FRET6 + SX_FRET7)/2-3, D_LABELHEIGHT1, 15, 25);
+        g.drawOval( (SX_FRET8 + SX_FRET9)/2-3, D_LABELHEIGHT1, 15, 25);
+        
+        g.drawOval( (SX_FRET0 + SX_FRET1)/2+2, D_LABELHEIGHT1 + 5, 5, 15);
+        g.drawOval( (SX_FRET2 + SX_FRET3)/2+2, D_LABELHEIGHT1 + 5, 5, 15);
+        g.drawOval( (SX_FRET4 + SX_FRET5)/2+2, D_LABELHEIGHT1 + 5, 5, 15);
+        g.drawOval( (SX_FRET6 + SX_FRET7)/2+2, D_LABELHEIGHT1 + 5, 5, 15);
+        g.drawOval( (SX_FRET8 + SX_FRET9)/2+2, D_LABELHEIGHT1 + 5, 5, 15);
+        
+        g.setColor(Color.BLACK);
+        
+    }
+    
+    protected void paintComponent(Graphics g) {
+        //super.paintComponent(g);       
+
+        g.setFont(new Font("Times New Roman Bold", 25, 25));
+
+        g.setFont(g.getFont().deriveFont(Font.BOLD, g.getFont().getSize()+6));
+        
+        //Fill rectangle for FretBoard
+        g.setColor(Color.WHITE);
+        g.fillRect(CORNERFRETBOARD, CORNERFRETBOARD, WIDTHFRETBOARD, HEIGHTFRETBOARD);
+
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(CORNERFRETBOARD, CORNERFRETBOARD, SX_FRET0 - CORNERFRETBOARD, HEIGHTFRETBOARD);
+        
+      //Draw rectangle for FretBoard
+        g.setColor(Color.BLACK);
+        g.drawRect(CORNERFRETBOARD, CORNERFRETBOARD, WIDTHFRETBOARD, HEIGHTFRETBOARD);
+
+        g.setColor(Color.BLACK);
+        //draw frets
+        g.drawLine(SX_FRET0, CORNERFRETBOARD - 30, SX_FRET0, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET1, CORNERFRETBOARD - 30, SX_FRET1, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET2, CORNERFRETBOARD - 30, SX_FRET2, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET3, CORNERFRETBOARD - 30, SX_FRET3, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET4, CORNERFRETBOARD - 30, SX_FRET4, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET5, CORNERFRETBOARD - 30, SX_FRET5, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET6, CORNERFRETBOARD - 30, SX_FRET6, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET7, CORNERFRETBOARD - 30, SX_FRET7, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET8, CORNERFRETBOARD - 30, SX_FRET8, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET9, CORNERFRETBOARD - 30, SX_FRET9, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET10, CORNERFRETBOARD - 30, SX_FRET10, HEIGHTFRETBOARD + CORNERFRETBOARD);
+        g.drawLine(SX_FRET11, CORNERFRETBOARD - 30, SX_FRET11, HEIGHTFRETBOARD + CORNERFRETBOARD);
+
+        //label frets
+        g.drawString("Open", 40, 35);
+        g.drawString("1", 150, 35);
+        g.drawString("2", 225, 35);
+        g.drawString("3", 300, 35);
+        g.drawString("4", 375, 35);
+        g.drawString("5", 450, 35);
+        g.drawString("6", 525, 35);
+        g.drawString("7", 600, 35);
+        g.drawString("8", 675, 35);
+        g.drawString("9", 750, 35);
+        g.drawString("10", 825, 35);
+        g.drawString("11", 900, 35);
+
+        
+        //Draw strings on fretboard 
+        g.drawLine(35, 100, 965, 100);
+        g.drawLine(35, 150, 965, 150);
+        g.drawLine(35, 200, 965, 200);
+        g.drawLine(35, 250, 965, 250);
+
+        //Label Strings
+        g.drawString("G", 15, D_LABELHEIGHT0);
+        g.drawString("D", 15, D_LABELHEIGHT1);
+        g.drawString("A", 15, D_LABELHEIGHT2);
+        g.drawString("E", 15, D_LABELHEIGHT3);
+
+        //draw fret markers
+        g.setColor(Color.GRAY);
+        g.fillOval( (SX_FRET0 + SX_FRET1)/2 - 8, D_LABELHEIGHT1 -5, 25, 35);
+        g.fillOval( (SX_FRET2 + SX_FRET3)/2 - 8, D_LABELHEIGHT1 -5, 25, 35);
+        g.fillOval( (SX_FRET4 + SX_FRET5)/2 - 8, D_LABELHEIGHT1 -5, 25, 35);
+        g.fillOval( (SX_FRET6 + SX_FRET7)/2 - 8, D_LABELHEIGHT1 - 5, 25, 35);
+        g.fillOval( (SX_FRET8 + SX_FRET9)/2 - 8, D_LABELHEIGHT1 - 5, 25, 35);
+        
+        //add outline to fret markers
+        g.setColor(Color.CYAN);
+        g.drawOval( (SX_FRET0 + SX_FRET1)/2 - 8, D_LABELHEIGHT1 -5, 25, 35);
+        g.drawOval( (SX_FRET2 + SX_FRET3)/2 - 8, D_LABELHEIGHT1 -5, 25, 35);
+        g.drawOval( (SX_FRET4 + SX_FRET5)/2 - 8, D_LABELHEIGHT1 -5, 25, 35);
+        g.drawOval( (SX_FRET6 + SX_FRET7)/2 - 8, D_LABELHEIGHT1 - 5, 25, 35);
+        g.drawOval( (SX_FRET8 + SX_FRET9)/2 - 8, D_LABELHEIGHT1 - 5, 25, 35);
+        
+        g.drawOval( (SX_FRET0 + SX_FRET1)/2-3, D_LABELHEIGHT1, 15, 25);
+        g.drawOval( (SX_FRET2 + SX_FRET3)/2-3, D_LABELHEIGHT1, 15, 25);
+        g.drawOval( (SX_FRET4 + SX_FRET5)/2-3, D_LABELHEIGHT1, 15, 25);
+        g.drawOval( (SX_FRET6 + SX_FRET7)/2-3, D_LABELHEIGHT1, 15, 25);
+        g.drawOval( (SX_FRET8 + SX_FRET9)/2-3, D_LABELHEIGHT1, 15, 25);
+        
+        g.drawOval( (SX_FRET0 + SX_FRET1)/2+2, D_LABELHEIGHT1 + 5, 5, 15);
+        g.drawOval( (SX_FRET2 + SX_FRET3)/2+2, D_LABELHEIGHT1 + 5, 5, 15);
+        g.drawOval( (SX_FRET4 + SX_FRET5)/2+2, D_LABELHEIGHT1 + 5, 5, 15);
+        g.drawOval( (SX_FRET6 + SX_FRET7)/2+2, D_LABELHEIGHT1 + 5, 5, 15);
+        g.drawOval( (SX_FRET8 + SX_FRET9)/2+2, D_LABELHEIGHT1 + 5, 5, 15);
+        
+        g.setColor(Color.BLACK);
+        
         paintNotes(g);
         paintLessonNotes(g);
 
@@ -203,7 +334,7 @@ public class FretBoardPanel extends JPanel {
 
             if (displayAllNotes == true) {
 
-                if (noteVal == "A") {
+                if (noteVal.equals("A")) {
                     //add dot to mark note
                     g.setColor(Color.RED);
                     g.fillOval(DOTWIDTH5, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -217,7 +348,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("A", D_LABELWIDTH0, D_LABELHEIGHT2);
                     g.drawString("A", D_LABELWIDTH7, D_LABELHEIGHT1);
                     g.drawString("A", D_LABELWIDTH2, D_LABELHEIGHT0);
-                } else if (noteVal == "Bb") {
+                } else if (noteVal.equals("Bb")) {
                     //add dot to mark note
                     g.setColor(Color.RED);
                     g.fillOval(DOTWIDTH6, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -231,7 +362,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("Bb", D_LABELWIDTH1, D_LABELHEIGHT2);
                     g.drawString("Bb", D_LABELWIDTH8, D_LABELHEIGHT1);
                     g.drawString("Bb", D_LABELWIDTH3, D_LABELHEIGHT0);
-                } else if (noteVal == "B") {
+                } else if (noteVal.equals("B")) {
                     //add dot to mark note
                     g.setColor(Color.RED);
                     g.fillOval(DOTWIDTH7, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -245,7 +376,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("B", D_LABELWIDTH2, D_LABELHEIGHT2);
                     g.drawString("B", D_LABELWIDTH9, D_LABELHEIGHT1);
                     g.drawString("B", D_LABELWIDTH4, D_LABELHEIGHT0);
-                } else if (noteVal == "C") {
+                } else if (noteVal.equals("C")) {
                     //mark notes with dot
                     g.setColor(Color.RED);
                     g.fillOval(DOTWIDTH8, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -260,7 +391,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("C", D_LABELWIDTH10, D_LABELHEIGHT1);
                     g.drawString("C", D_LABELWIDTH5, D_LABELHEIGHT0);
 
-                } else if (noteVal == "C#") {
+                } else if (noteVal.equals("C#")) {
                     //mark notes with dot
                     g.setColor(Color.RED);
                     g.fillOval(DOTWIDTH9, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -275,7 +406,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("C#", D_LABELWIDTH11, D_LABELHEIGHT1);
                     g.drawString("C#", D_LABELWIDTH6, D_LABELHEIGHT0);
 
-                } else if (noteVal == "D") {
+                } else if (noteVal.equals("D")) {
                     //add dot to mark notes
                     g.setColor(Color.RED);
                     g.fillOval(DOTWIDTH10, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -290,7 +421,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("D", D_LABELWIDTH0, D_LABELHEIGHT1);
                     g.drawString("D", D_LABELWIDTH7, D_LABELHEIGHT0);
 
-                } else if (noteVal == "Eb") {
+                } else if (noteVal.equals("Eb")) {
                     //add dot to mark notes
                     g.setColor(Color.RED);
                     g.fillOval(DOTWIDTH11, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -305,7 +436,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("Eb", D_LABELWIDTH1, D_LABELHEIGHT1);
                     g.drawString("Eb", D_LABELWIDTH8, D_LABELHEIGHT0);
 
-                } else if (noteVal == "E") {
+                } else if (noteVal.equals("E")) {
                     //add dot to mark notes
                     g.setColor(Color.RED);
                     g.fillOval(DOTWIDTH0, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -319,7 +450,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("E", D_LABELWIDTH7, D_LABELHEIGHT2);
                     g.drawString("E", D_LABELWIDTH2, D_LABELHEIGHT1);
                     g.drawString("E", D_LABELWIDTH9, D_LABELHEIGHT0);
-                } else if (noteVal == "F") {
+                } else if (noteVal.equals("F") ){
                     //add dot to mark notes
                     g.setColor(Color.RED);
                     g.fillOval(DOTWIDTH1, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -334,7 +465,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("F", D_LABELWIDTH3, D_LABELHEIGHT1);
                     g.drawString("F", D_LABELWIDTH10, D_LABELHEIGHT0);
 
-                } else if (noteVal == "F#") {
+                } else if (noteVal.equals("F#")) {
                     //add dot to mark notes
                     g.setColor(Color.RED);
                     g.fillOval(DOTWIDTH2, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -349,7 +480,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("F#", D_LABELWIDTH4, D_LABELHEIGHT1);
                     g.drawString("F#", D_LABELWIDTH11, D_LABELHEIGHT0);
 
-                } else if (noteVal == "G") {
+                } else if (noteVal.equals("G")) {
                     //add dot to mark notes
                     g.setColor(Color.RED);
                     g.fillOval(DOTWIDTH3, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -364,7 +495,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("G", D_LABELWIDTH5, D_LABELHEIGHT1);
                     g.drawString("G", D_LABELWIDTH0, D_LABELHEIGHT0);
                 }
-                else if (noteVal == "G#") {
+                else if (noteVal.equals("G#") ){
                     //add dot to mark notes
                     g.setColor(Color.RED);
                     g.fillOval(DOTWIDTH4, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -481,7 +612,7 @@ public class FretBoardPanel extends JPanel {
             	*/
             	if(currentOctave == 1)
             	{
-                    if (noteVal == "A") {
+                    if (noteVal.equals("A")) {
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH5, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -492,7 +623,7 @@ public class FretBoardPanel extends JPanel {
                         g.drawString("A", D_LABELWIDTH5, D_LABELHEIGHT3);
                         g.drawString("A", D_LABELWIDTH0, D_LABELHEIGHT2);
                         
-                    } else if (noteVal == "Bb") {
+                    } else if (noteVal.equals("Bb") ){
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH6, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -503,7 +634,7 @@ public class FretBoardPanel extends JPanel {
                         g.drawString("Bb", D_LABELWIDTH6, D_LABELHEIGHT3);
                         g.drawString("Bb", D_LABELWIDTH1, D_LABELHEIGHT2);
 
-                    } else if (noteVal == "B") {
+                    } else if (noteVal.equals("B")) {
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH7, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -514,7 +645,7 @@ public class FretBoardPanel extends JPanel {
                         g.drawString("B", D_LABELWIDTH7, D_LABELHEIGHT3);
                         g.drawString("B", D_LABELWIDTH2, D_LABELHEIGHT2);
                         
-                    } else if (noteVal == "C") {
+                    } else if (noteVal.equals("C")) {
                     	/*
                          * CURRENTLY NOTE BEING USED AT THIS TUNING 
                     	//mark notes with dot
@@ -524,7 +655,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("C", D_LABELWIDTH8, D_LABELHEIGHT3);
 						*/
-                    } else if (noteVal == "C#") {
+                    } else if (noteVal.equals("C#") ){
                     	/*
                          * CURRENTLY NOTE BEING USED AT THIS TUNING
                         //mark notes with dot
@@ -534,7 +665,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("C#", D_LABELWIDTH9, D_LABELHEIGHT3);
 						*/
-                    } else if (noteVal == "D") {
+                    } else if (noteVal.equals("D") ){
                     	/*
                          * CURRENTLY NOTE BEING USED AT THIS TUNING
                         //add dot to mark notes
@@ -544,7 +675,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("D", D_LABELWIDTH10, D_LABELHEIGHT3);
 						*/
-                    } else if (noteVal == "Eb") {
+                    } else if (noteVal.equals("Eb") ){
                     	/*
                          * CURRENTLY NOTE BEING USED AT THIS TUNING
                         //add dot to mark notes
@@ -554,7 +685,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("Eb", D_LABELWIDTH11, D_LABELHEIGHT3);
 						*/
-                    } else if (noteVal == "E") {
+                    } else if (noteVal.equals("E") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH0, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -563,7 +694,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("E", D_LABELWIDTH0, D_LABELHEIGHT3);
                         
-                    } else if (noteVal == "F") {
+                    } else if (noteVal.equals("F") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH1, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -572,7 +703,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("F", D_LABELWIDTH1, D_LABELHEIGHT3);
 
-                    } else if (noteVal == "F#") {
+                    } else if (noteVal.equals("F#") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH2, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -581,7 +712,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("F#", D_LABELWIDTH2, D_LABELHEIGHT3);
 
-                    } else if (noteVal == "G") {
+                    } else if (noteVal.equals("G") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH3, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -590,7 +721,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("G", D_LABELWIDTH3, D_LABELHEIGHT3);
                     }
-                    else if (noteVal == "G#") {
+                    else if (noteVal.equals("G#") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH4, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -602,7 +733,7 @@ public class FretBoardPanel extends JPanel {
             	}
             	else if(currentOctave == 2)
             	{
-                    if (noteVal == "A") {
+                    if (noteVal.equals("A") ) {
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH7, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
@@ -612,7 +743,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("A", D_LABELWIDTH7, D_LABELHEIGHT1);
                         g.drawString("A", D_LABELWIDTH2, D_LABELHEIGHT0);
-                    } else if (noteVal == "Bb") {
+                    } else if (noteVal.equals("Bb") ){
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH8, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
@@ -622,7 +753,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("Bb", D_LABELWIDTH8, D_LABELHEIGHT1);
                         g.drawString("Bb", D_LABELWIDTH3, D_LABELHEIGHT0);
-                    } else if (noteVal == "B") {
+                    } else if (noteVal.equals("B") ){
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH9, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
@@ -632,7 +763,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("B", D_LABELWIDTH9, D_LABELHEIGHT1);
                         g.drawString("B", D_LABELWIDTH4, D_LABELHEIGHT0);
-                    } else if (noteVal == "C") {
+                    } else if (noteVal.equals("C") ){
                         //mark notes with dot
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH3, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -643,7 +774,7 @@ public class FretBoardPanel extends JPanel {
                         g.drawString("C", D_LABELWIDTH3, D_LABELHEIGHT2);
                         g.drawString("C", D_LABELWIDTH8, D_LABELHEIGHT3);
 
-                    } else if (noteVal == "C#") {
+                    } else if (noteVal.equals("C#") ){
                         //mark notes with dot
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH4, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -654,17 +785,19 @@ public class FretBoardPanel extends JPanel {
                         g.drawString("C#", D_LABELWIDTH4, D_LABELHEIGHT2);
                         g.drawString("C#", D_LABELWIDTH9, D_LABELHEIGHT3);
 
-                    } else if (noteVal == "D") {
+                    } else if (noteVal.equals("D") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
+                        g.fillOval(DOTWIDTH0, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
                         g.fillOval(DOTWIDTH5, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
                         g.fillOval(DOTWIDTH10, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
+                        
                         //label dot
                         g.setColor(Color.BLACK);
+                        g.drawString("D", D_LABELWIDTH0, D_LABELHEIGHT1);
                         g.drawString("D", D_LABELWIDTH5, D_LABELHEIGHT2);
                         g.drawString("D", D_LABELWIDTH10, D_LABELHEIGHT3);
-                    } else if (noteVal == "Eb") {
+                    } else if (noteVal.equals("Eb") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH6, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -674,7 +807,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("Eb", D_LABELWIDTH6, D_LABELHEIGHT2);
                         g.drawString("Eb", D_LABELWIDTH11, D_LABELHEIGHT3);
-                    } else if (noteVal == "E") {
+                    } else if (noteVal.equals("E") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH7, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -684,7 +817,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("E", D_LABELWIDTH7, D_LABELHEIGHT2);
                         g.drawString("E", D_LABELWIDTH2, D_LABELHEIGHT1);
-                    } else if (noteVal == "F") {
+                    } else if (noteVal.equals("F") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH8, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -695,7 +828,7 @@ public class FretBoardPanel extends JPanel {
                         g.drawString("F", D_LABELWIDTH8, D_LABELHEIGHT2);
                         g.drawString("F", D_LABELWIDTH3, D_LABELHEIGHT1);
 
-                    } else if (noteVal == "F#") {
+                    } else if (noteVal.equals("F#") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH9, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -706,7 +839,7 @@ public class FretBoardPanel extends JPanel {
                         g.drawString("F#", D_LABELWIDTH9, D_LABELHEIGHT2);
                         g.drawString("F#", D_LABELWIDTH4, D_LABELHEIGHT1);
 
-                    } else if (noteVal == "G") {
+                    } else if (noteVal.equals("G") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH10, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -719,7 +852,7 @@ public class FretBoardPanel extends JPanel {
                         g.drawString("G", D_LABELWIDTH5, D_LABELHEIGHT1);
                         g.drawString("G", D_LABELWIDTH0, D_LABELHEIGHT0);
                     }
-                    else if (noteVal == "G#") {
+                    else if (noteVal.equals("G#") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH11, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -761,7 +894,7 @@ public class FretBoardPanel extends JPanel {
                         g.drawString("B", D_LABELWIDTH9, D_LABELHEIGHT1);
                     } 
                     */
-                    if (noteVal == "C") {
+                    if (noteVal.equals("C") ){
                         //mark notes with dot
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH10, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
@@ -772,7 +905,7 @@ public class FretBoardPanel extends JPanel {
                         g.drawString("C", D_LABELWIDTH10, D_LABELHEIGHT1);
                         g.drawString("C", D_LABELWIDTH5, D_LABELHEIGHT0);
 
-                    } else if (noteVal == "C#") {
+                    } else if (noteVal.equals("C#") ){
                         //mark notes with dot
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH11, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
@@ -783,7 +916,7 @@ public class FretBoardPanel extends JPanel {
                         g.drawString("C#", D_LABELWIDTH11, D_LABELHEIGHT1);
                         g.drawString("C#", D_LABELWIDTH6, D_LABELHEIGHT0);
 
-                    } else if (noteVal == "D") {
+                    } else if (noteVal.equals("D") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH7, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
@@ -792,7 +925,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("D", D_LABELWIDTH7, D_LABELHEIGHT0);
 
-                    } else if (noteVal == "Eb") {
+                    } else if (noteVal.equals("Eb") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH8, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
@@ -801,7 +934,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("Eb", D_LABELWIDTH8, D_LABELHEIGHT0);
 
-                    } else if (noteVal == "E") {
+                    } else if (noteVal.equals("E") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH9, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
@@ -809,7 +942,7 @@ public class FretBoardPanel extends JPanel {
                         //add label to dot
                         g.setColor(Color.BLACK);
                         g.drawString("E", D_LABELWIDTH9, D_LABELHEIGHT0);
-                    } else if (noteVal == "F") {
+                    } else if (noteVal.equals("F") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH10, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
@@ -818,7 +951,7 @@ public class FretBoardPanel extends JPanel {
                         g.setColor(Color.BLACK);
                         g.drawString("F", D_LABELWIDTH10, D_LABELHEIGHT0);
 
-                    } else if (noteVal == "F#") {
+                    } else if (noteVal.equals("F#") ){
                         //add dot to mark notes
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH11, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
@@ -987,7 +1120,7 @@ public class FretBoardPanel extends JPanel {
     	
         if (displayAllNotes == true) {
         	
-            if (lNoteVal == "A") {
+            if (lNoteVal.equals("A") ){
                 //add dot to mark note
                 g.setColor(lessonColor);
                 g.fillOval(DOTWIDTH5, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1001,7 +1134,7 @@ public class FretBoardPanel extends JPanel {
                 g.drawString("A", D_LABELWIDTH0, D_LABELHEIGHT2);
                 g.drawString("A", D_LABELWIDTH7, D_LABELHEIGHT1);
                 g.drawString("A", D_LABELWIDTH2, D_LABELHEIGHT0);
-            } else if (lNoteVal == "Bb") {
+            } else if (lNoteVal.equals("Bb") ){
                 //add dot to mark note
                 g.setColor(lessonColor);
                 g.fillOval(DOTWIDTH6, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1015,7 +1148,7 @@ public class FretBoardPanel extends JPanel {
                 g.drawString("Bb", D_LABELWIDTH1, D_LABELHEIGHT2);
                 g.drawString("Bb", D_LABELWIDTH8, D_LABELHEIGHT1);
                 g.drawString("Bb", D_LABELWIDTH3, D_LABELHEIGHT0);
-            } else if (lNoteVal == "B") {
+            } else if (lNoteVal.equals("B") ){
                 //add dot to mark note
                 g.setColor(lessonColor);
                 g.fillOval(DOTWIDTH7, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1029,7 +1162,7 @@ public class FretBoardPanel extends JPanel {
                 g.drawString("B", D_LABELWIDTH2, D_LABELHEIGHT2);
                 g.drawString("B", D_LABELWIDTH9, D_LABELHEIGHT1);
                 g.drawString("B", D_LABELWIDTH4, D_LABELHEIGHT0);
-            } else if (lNoteVal == "C") {
+            } else if (lNoteVal.equals("C") ){
                 //mark notes with dot
                 g.setColor(lessonColor);
                 g.fillOval(DOTWIDTH8, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1044,7 +1177,7 @@ public class FretBoardPanel extends JPanel {
                 g.drawString("C", D_LABELWIDTH10, D_LABELHEIGHT1);
                 g.drawString("C", D_LABELWIDTH5, D_LABELHEIGHT0);
 
-            } else if (lNoteVal == "C#") {
+            } else if (lNoteVal.equals("C#") ){
                 //mark notes with dot
                 g.setColor(lessonColor);
                 g.fillOval(DOTWIDTH9, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1059,7 +1192,7 @@ public class FretBoardPanel extends JPanel {
                 g.drawString("C#", D_LABELWIDTH11, D_LABELHEIGHT1);
                 g.drawString("C#", D_LABELWIDTH6, D_LABELHEIGHT0);
 
-            } else if (lNoteVal == "D") {
+            } else if (lNoteVal.equals("D") ){
                 //add dot to mark notes
                 g.setColor(lessonColor);
                 g.fillOval(DOTWIDTH10, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1074,7 +1207,7 @@ public class FretBoardPanel extends JPanel {
                 g.drawString("D", D_LABELWIDTH0, D_LABELHEIGHT1);
                 g.drawString("D", D_LABELWIDTH7, D_LABELHEIGHT0);
 
-            } else if (lNoteVal == "Eb") {
+            } else if (lNoteVal.equals("Eb") ){
                 //add dot to mark notes
                 g.setColor(lessonColor);
                 g.fillOval(DOTWIDTH11, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1089,7 +1222,7 @@ public class FretBoardPanel extends JPanel {
                 g.drawString("Eb", D_LABELWIDTH1, D_LABELHEIGHT1);
                 g.drawString("Eb", D_LABELWIDTH8, D_LABELHEIGHT0);
 
-            } else if (lNoteVal == "E") {
+            } else if (lNoteVal.equals("E") ){
                 //add dot to mark notes
                 g.setColor(lessonColor);
                 g.fillOval(DOTWIDTH0, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1103,7 +1236,7 @@ public class FretBoardPanel extends JPanel {
                 g.drawString("E", D_LABELWIDTH7, D_LABELHEIGHT2);
                 g.drawString("E", D_LABELWIDTH2, D_LABELHEIGHT1);
                 g.drawString("E", D_LABELWIDTH9, D_LABELHEIGHT0);
-            } else if (lNoteVal == "F") {
+            } else if (lNoteVal.equals("F") ){
                 //add dot to mark notes
                 g.setColor(lessonColor);
                 g.fillOval(DOTWIDTH1, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1118,7 +1251,7 @@ public class FretBoardPanel extends JPanel {
                 g.drawString("F", D_LABELWIDTH3, D_LABELHEIGHT1);
                 g.drawString("F", D_LABELWIDTH10, D_LABELHEIGHT0);
 
-            } else if (lNoteVal == "F#") {
+            } else if (lNoteVal.equals("F#") ){
                 //add dot to mark notes
                 g.setColor(lessonColor);
                 g.fillOval(DOTWIDTH2, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1133,7 +1266,7 @@ public class FretBoardPanel extends JPanel {
                 g.drawString("F#", D_LABELWIDTH4, D_LABELHEIGHT1);
                 g.drawString("F#", D_LABELWIDTH11, D_LABELHEIGHT0);
 
-            } else if (lNoteVal == "G") {
+            } else if (lNoteVal.equals("G") ){
                 //add dot to mark notes
                 g.setColor(lessonColor);
                 g.fillOval(DOTWIDTH3, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1148,7 +1281,7 @@ public class FretBoardPanel extends JPanel {
                 g.drawString("G", D_LABELWIDTH5, D_LABELHEIGHT1);
                 g.drawString("G", D_LABELWIDTH0, D_LABELHEIGHT0);
             }
-            else if (lNoteVal == "G#") {
+            else if (lNoteVal.equals("G#") ){
                 //add dot to mark notes
                 g.setColor(lessonColor);
                 g.fillOval(DOTWIDTH4, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1266,7 +1399,7 @@ public class FretBoardPanel extends JPanel {
         	 */
         	if(lOct == 1)
         	{
-                if (lNoteVal == "A") {
+                if (lNoteVal.equals("A") ){
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH5, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1277,7 +1410,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("A", D_LABELWIDTH5, D_LABELHEIGHT3);
                     g.drawString("A", D_LABELWIDTH0, D_LABELHEIGHT2);
                     
-                } else if (lNoteVal == "Bb") {
+                } else if (lNoteVal.equals("Bb") ){
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH6, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1288,7 +1421,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("Bb", D_LABELWIDTH6, D_LABELHEIGHT3);
                     g.drawString("Bb", D_LABELWIDTH1, D_LABELHEIGHT2);
 
-                } else if (lNoteVal == "B") {
+                } else if (lNoteVal.equals("B") ){
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH7, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1299,7 +1432,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("B", D_LABELWIDTH7, D_LABELHEIGHT3);
                     g.drawString("B", D_LABELWIDTH2, D_LABELHEIGHT2);
                     
-                } else if (lNoteVal == "C") {
+                } else if (lNoteVal.equals("C") ){
                 	/*
                      * CURRENTLY NOTE BEING USED AT THIS TUNING 
                 	//mark notes with dot
@@ -1309,7 +1442,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("C", D_LABELWIDTH8, D_LABELHEIGHT3);
 					*/
-                } else if (lNoteVal == "C#") {
+                } else if (lNoteVal.equals("C#") ){
                 	/*
                      * CURRENTLY NOTE BEING USED AT THIS TUNING
                     //mark notes with dot
@@ -1319,7 +1452,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("C#", D_LABELWIDTH9, D_LABELHEIGHT3);
 					*/
-                } else if (lNoteVal == "D") {
+                } else if (lNoteVal.equals("D") ){
                 	/*
                      * CURRENTLY NOTE BEING USED AT THIS TUNING
                     //add dot to mark notes
@@ -1329,7 +1462,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("D", D_LABELWIDTH10, D_LABELHEIGHT3);
 					*/
-                } else if (lNoteVal == "Eb") {
+                } else if (lNoteVal.equals("Eb") ){
                 	/*
                      * CURRENTLY NOTE BEING USED AT THIS TUNING
                     //add dot to mark notes
@@ -1339,7 +1472,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("Eb", D_LABELWIDTH11, D_LABELHEIGHT3);
 					*/
-                } else if (lNoteVal == "E") {
+                } else if (lNoteVal.equals("E") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH0, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1348,7 +1481,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("E", D_LABELWIDTH0, D_LABELHEIGHT3);
                     
-                } else if (lNoteVal == "F") {
+                } else if (lNoteVal.equals("F") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH1, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1357,7 +1490,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("F", D_LABELWIDTH1, D_LABELHEIGHT3);
 
-                } else if (lNoteVal == "F#") {
+                } else if (lNoteVal.equals("F#") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH2, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1366,7 +1499,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("F#", D_LABELWIDTH2, D_LABELHEIGHT3);
 
-                } else if (lNoteVal == "G") {
+                } else if (lNoteVal.equals("G") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH3, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1375,7 +1508,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("G", D_LABELWIDTH3, D_LABELHEIGHT3);
                 }
-                else if (lNoteVal == "G#") {
+                else if (lNoteVal.equals("G#") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH4, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
@@ -1387,7 +1520,7 @@ public class FretBoardPanel extends JPanel {
         	}
         	else if(lOct == 2)
         	{
-                if (lNoteVal == "A") {
+                if (lNoteVal.equals("A") ){
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH7, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
@@ -1397,7 +1530,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("A", D_LABELWIDTH7, D_LABELHEIGHT1);
                     g.drawString("A", D_LABELWIDTH2, D_LABELHEIGHT0);
-                } else if (lNoteVal == "Bb") {
+                } else if (lNoteVal.equals("Bb") ){
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH8, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
@@ -1407,7 +1540,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("Bb", D_LABELWIDTH8, D_LABELHEIGHT1);
                     g.drawString("Bb", D_LABELWIDTH3, D_LABELHEIGHT0);
-                } else if (lNoteVal == "B") {
+                } else if (lNoteVal.equals("B") ){
                     //add dot to mark note
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH9, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
@@ -1417,7 +1550,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("B", D_LABELWIDTH9, D_LABELHEIGHT1);
                     g.drawString("B", D_LABELWIDTH4, D_LABELHEIGHT0);
-                } else if (lNoteVal == "C") {
+                } else if (lNoteVal.equals("C") ){
                     //mark notes with dot
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH3, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -1428,7 +1561,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("C", D_LABELWIDTH3, D_LABELHEIGHT2);
                     g.drawString("C", D_LABELWIDTH8, D_LABELHEIGHT3);
 
-                } else if (lNoteVal == "C#") {
+                } else if (lNoteVal.equals("C#") ){
                     //mark notes with dot
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH4, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -1439,17 +1572,19 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("C#", D_LABELWIDTH4, D_LABELHEIGHT2);
                     g.drawString("C#", D_LABELWIDTH9, D_LABELHEIGHT3);
 
-                } else if (lNoteVal == "D") {
-                    //add dot to mark notes
+                } else if (lNoteVal.equals("D") ){
+                	//add dot to mark notes
                     g.setColor(lessonColor);
+                    g.fillOval(DOTWIDTH0, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
                     g.fillOval(DOTWIDTH5, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
                     g.fillOval(DOTWIDTH10, DOTHEIGHT3, DOT_RADIUS, DOT_RADIUS);
-
+                    
                     //label dot
                     g.setColor(Color.BLACK);
+                    g.drawString("D", D_LABELWIDTH0, D_LABELHEIGHT1);
                     g.drawString("D", D_LABELWIDTH5, D_LABELHEIGHT2);
                     g.drawString("D", D_LABELWIDTH10, D_LABELHEIGHT3);
-                } else if (lNoteVal == "Eb") {
+                } else if (lNoteVal.equals("Eb") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH6, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -1459,7 +1594,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("Eb", D_LABELWIDTH6, D_LABELHEIGHT2);
                     g.drawString("Eb", D_LABELWIDTH11, D_LABELHEIGHT3);
-                } else if (lNoteVal == "E") {
+                } else if (lNoteVal.equals("E") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH7, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -1469,7 +1604,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("E", D_LABELWIDTH7, D_LABELHEIGHT2);
                     g.drawString("E", D_LABELWIDTH2, D_LABELHEIGHT1);
-                } else if (lNoteVal == "F") {
+                } else if (lNoteVal.equals("F") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH8, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -1480,7 +1615,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("F", D_LABELWIDTH8, D_LABELHEIGHT2);
                     g.drawString("F", D_LABELWIDTH3, D_LABELHEIGHT1);
 
-                } else if (lNoteVal == "F#") {
+                } else if (lNoteVal.equals("F#") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH9, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -1491,7 +1626,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("F#", D_LABELWIDTH9, D_LABELHEIGHT2);
                     g.drawString("F#", D_LABELWIDTH4, D_LABELHEIGHT1);
 
-                } else if (lNoteVal == "G") {
+                } else if (lNoteVal.equals("G") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH10, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -1504,7 +1639,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("G", D_LABELWIDTH5, D_LABELHEIGHT1);
                     g.drawString("G", D_LABELWIDTH0, D_LABELHEIGHT0);
                 }
-                else if (lNoteVal == "G#") {
+                else if (lNoteVal.equals("G#") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH11, DOTHEIGHT2, DOT_RADIUS, DOT_RADIUS);
@@ -1546,7 +1681,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("B", D_LABELWIDTH9, D_LABELHEIGHT1);
                 } 
                 */
-                if (lNoteVal == "C") {
+                if (lNoteVal.equals("C") ){
                     //mark notes with dot
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH10, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
@@ -1557,7 +1692,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("C", D_LABELWIDTH10, D_LABELHEIGHT1);
                     g.drawString("C", D_LABELWIDTH5, D_LABELHEIGHT0);
 
-                } else if (lNoteVal == "C#") {
+                } else if (lNoteVal.equals("C#") ){
                     //mark notes with dot
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH11, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
@@ -1568,7 +1703,7 @@ public class FretBoardPanel extends JPanel {
                     g.drawString("C#", D_LABELWIDTH11, D_LABELHEIGHT1);
                     g.drawString("C#", D_LABELWIDTH6, D_LABELHEIGHT0);
 
-                } else if (lNoteVal == "D") {
+                } else if (lNoteVal.equals("D") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH7, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
@@ -1577,7 +1712,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("D", D_LABELWIDTH7, D_LABELHEIGHT0);
 
-                } else if (lNoteVal == "Eb") {
+                } else if (lNoteVal.equals("Eb") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH8, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
@@ -1586,7 +1721,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("Eb", D_LABELWIDTH8, D_LABELHEIGHT0);
 
-                } else if (lNoteVal == "E") {
+                } else if (lNoteVal.equals("E") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH9, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
@@ -1594,7 +1729,7 @@ public class FretBoardPanel extends JPanel {
                     //add label to dot
                     g.setColor(Color.BLACK);
                     g.drawString("E", D_LABELWIDTH9, D_LABELHEIGHT0);
-                } else if (lNoteVal == "F") {
+                } else if (lNoteVal.equals("F") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH10, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);
@@ -1603,7 +1738,7 @@ public class FretBoardPanel extends JPanel {
                     g.setColor(Color.BLACK);
                     g.drawString("F", D_LABELWIDTH10, D_LABELHEIGHT0);
 
-                } else if (lNoteVal == "F#") {
+                } else if (lNoteVal.equals("F#") ){
                     //add dot to mark notes
                     g.setColor(lessonColor);
                     g.fillOval(DOTWIDTH11, DOTHEIGHT0, DOT_RADIUS, DOT_RADIUS);

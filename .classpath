@@ -6,5 +6,6 @@
 	<classpathentry exported="true" kind="lib" path="/Users/Shawn/Desktop/SD-DEV/ArtificialInstructorv1.0/Copies of Libraries/TarsosDSP-nightly-bin.jar"/>
 	<classpathentry exported="true" kind="lib" path="/Users/Shawn/Desktop/SD-DEV/ArtificialInstructorv1.0/Copies of Libraries/SoundDetector-nightly.jar"/>
 	<classpathentry exported="true" kind="lib" path="/Users/Shawn/Desktop/SD-DEV/ArtificialInstructorv1.0/Copies of Libraries/Oscilloscope-nightly.jar"/>
+	<classpathentry kind="lib" path="/Users/Shawn/Downloads/json-simple-1.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
