@@ -62,7 +62,7 @@ public class UpNextPanel extends JPanel {
     private String [] nVals;
     private String secondNote, thirdNote, fourthNote;
     private int secondOct, thirdOct, fourthOct;
-    private boolean [] nRing;
+    private String [] nType;
     private double [] nTimes;
     private int [] nOcts;
     private double [] nGracePeriod;
@@ -72,9 +72,9 @@ public class UpNextPanel extends JPanel {
     
     
     //Class constructor
-    public UpNextPanel( String [] vals, boolean [] rings, double [] times, int [] octs, double [] graceP) {
+    public UpNextPanel( String [] vals, String [] types, double [] times, int [] octs, double [] graceP) {
     	nVals = vals;
-    	nRing = rings;
+    	nType = types;
     	nTimes = times;
     	nOcts = octs;
     	nGracePeriod = graceP;
@@ -104,9 +104,9 @@ public class UpNextPanel extends JPanel {
     	nTimes = times;
     }
     
-    public void assignRing(boolean [] rings)
+    public void assignType(String [] rings)
     {
-    	nRing = rings;
+    	nType = rings;
     }
     
     public void assignOcts(int [] octs)

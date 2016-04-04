@@ -1,0 +1,41 @@
+{
+    "Name": "1-C",
+    "ScoreReq": 20,
+    "HighScore": 0,
+    "BPM":60, 
+    "Notes":[
+        "C",
+        "C",
+        "C",
+        "F#",
+        "Z"
+    ],
+    "Times":[
+        2.00,
+        4.50,
+        7.50,
+        10.00,
+        15.00
+    ],
+    "Octaves":[
+        "2",
+        "2",
+        "2",
+        "2",
+        "1"
+    ],
+    "Ring":[
+        true,
+        false,
+        true,
+        false,
+        true
+    ],
+    "GracePeriods":[
+        0.5,
+        0.1,
+        0.4,
+        0.8,
+        0.1
+    ]
+}

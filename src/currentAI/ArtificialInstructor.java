@@ -7,47 +7,6 @@
  * 
  */
 package currentAI;
-/*
- * Shawn Huntzberry
- * 
- * The below code is a combination of my implementation of the JavaSound API and examples from the 
- * TarsoDSP library and examples. Not all the code below has been created by me, but the code I have used
- * I have noted the credit where it has come from. 
- * 
- */
-
-/*
-*      _______                       _____   _____ _____  
-*     |__   __|                     |  __ \ / ____|  __ \ 
-*        | | __ _ _ __ ___  ___  ___| |  | | (___ | |__) |
-*        | |/ _` | '__/ __|/ _ \/ __| |  | |\___ \|  ___/ 
-*        | | (_| | |  \__ \ (_) \__ \ |__| |____) | |     
-*        |_|\__,_|_|  |___/\___/|___/_____/|_____/|_|     
-*                                                         
-* -------------------------------------------------------------
-*
-* TarsosDSP is developed by Joren Six at IPEM, University Ghent
-*  
-* -------------------------------------------------------------
-*
-*  Info: http://0110.be/tag/TarsosDSP
-*  Github: https://github.com/JorenSix/TarsosDSP
-*  Releases: http://0110.be/releases/TarsosDSP/
-*  
-*  TarsosDSP includes modified source code by various authors,
-*  for credits and info, see README.
-* 
-*
-*   @inproceedings{six2014tarsosdsp,
-*	  author      = {Joren Six and Olmo Cornelis and Marc Leman},
-*	  title       = {{TarsosDSP, a Real-Time Audio Processing Framework in Java}},
-*	  booktitle   = {{Proceedings of the 53rd AES Conference (AES 53rd)}}, 
-*	  year        =  2014
-*	}
-*	
-*/
-
-
 
 /*
  * JavaSound API imports required
@@ -124,6 +83,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import Lessons.*;
+
 /*
  *  ArtificalInstructor currently:
  *  	-Gets audioInput from a line-in
@@ -175,13 +136,13 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     public static JFrame frame;							//frame for the ArtificalInstructor Object
     private JPanel buttonsPanel;						//panel to hold all of the buttons on the lesson player page
     private boolean homeLoaded, classLoaded, tunerLoaded; //statsLoaded;
-    private boolean lessonSLoaded;
+    private boolean lessonSLoaded, createLesLoaded;
     
     /*
      * Variables for top half of the lessonPage GUI and the TunerPage GUI
      */
     TargetDataLine line;
-    private JPanel tunerPanel, lPanel;			//two panels the user may user(lesson player and tuner player)
+    private JPanel tunerPanel, lPanel, createLessonP;			//two panels the user may user(lesson player and tuner player)
     private JScrollPane sp;						//scroll pane to apply to lessonTextArea to allow old info to be stored with new info
     private JTextArea lessonTextArea, tunerTextArea;	//different textareas used by the different screens
     private JButton start;					//buttons used by tuner panel and lesson panel
@@ -204,7 +165,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
      * Variables for the homepage GUI
      */
     private JPanel homePage;
-    private JButton loadTune, loadStat, loadClass, loadHomePage, closeProgram, loadLessonSelect;
+    private JButton loadTune, loadStat, loadClass, loadHomePage, closeProgram, loadLessonSelect, loadLessonCreate;
 	private JPanel homeButtons;
     private JLabel homeLabel;
     
@@ -214,6 +175,12 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
      */
     private JPanel lessonSelect;
     private JButton lesson1, lesson2, lesson3, lesson4, lesson5, backHome;
+    
+    /*
+     * Variables for createLessonPanel
+     */
+    private createLessonPanel createPanel;
+    private JButton homeFromCreate;
     
     
     /*
@@ -225,12 +192,26 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     private double [] nTimes = {1.00};			//times to play notes at
     private String [] nNotes = {"Z"};					//value of notes 
     private int [] nOcts = {3};										//octaves of notes
-    private boolean [] nRing = {false};
+    private String [] nType = {"Whole"};
     private double [] nGracePeriod = {1};
     private FretLesson lessonOne;															//Lesson object to store operate using data
     private String lessonName = "lesson1";
+    private double BPM = 60;
     
+    /*
+     * Variables for storing user attempt 
+     */
+    private String [] uNotes = {"NEW SET"};
+    private int [] uOcts = {1000};
+    private double [] uTimes = {1000};
+    private double [] uFreq = {1000};
+    private int userAttemptCounter = 0;
     private boolean newNote = false;
+    
+    
+    
+    JTextArea inputLesson;
+    JButton selectCustLesson;
     
     //*************BEING ACTION LISTENERS*****************//
    
@@ -266,9 +247,12 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+                	lessonTextArea.setText("");
             	} 
         		else {
-                	System.out.println("RECORDING ALREADY IN PROGRESS");
+        			lessonTextArea.append("RECORDING ALREADY BEGAN!\n");
+            		lessonTextArea.setCaretPosition(lessonTextArea.getDocument().getLength());
+                
             	}
            }
         
@@ -301,9 +285,13 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
             		
             		line.stop();
             		line.close();
+            		
+            		lessonTextArea.setText("");
             	} 
             	else {
-            		System.out.println("NO RECORDING IN PROGRESS TO STOP");
+            		lessonTextArea.append("NO RECORDING IN PROGRESS!! PRESS START TO BEGIN\n");
+            		lessonTextArea.setCaretPosition(lessonTextArea.getDocument().getLength());
+                
             	}
             }
         
@@ -416,25 +404,106 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     };
    
     /*
+     * 	ActionListener to load lesson creation from homepage
+     */
+    private ActionListener loadCreate = new ActionListener() {
+    	@Override
+    	public void actionPerformed(final ActionEvent e){
+    		
+    		try {
+				addProperPanels(5);
+			} catch (LineUnavailableException | UnsupportedAudioFileException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    		
+    	}
+    };
+    
+    /*
+     * Actionlistener to load the homepage from lessonCreate
+     */
+    private ActionListener cancelLessonCreation = new ActionListener() {
+    	@Override
+    	public void actionPerformed(final ActionEvent e){
+    		try {
+				addProperPanels(2);
+			} catch (LineUnavailableException | UnsupportedAudioFileException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	}
+    };
+    
+    /*
      * 	ActionListener to exit the program from the homepage
      */
     private ActionListener exitProgram = new ActionListener() {
     	@Override
     	public void actionPerformed(final ActionEvent e){
+    		
+    		//if line has been initiated then stop/close before exiting program
+    		if(line != null){
+    			
+    			if(line.isOpen() == true)
+    			{
+    				if(line.isActive() == true){
+    					line.stop();
+    				}
+    			
+    				line.close();
+    			}
+    		}
     		System.exit(1);
     	}
     };
     
+    /*
+     * 	ActionListener to select level
+     */
+    private ActionListener custLevelSelector = new ActionListener() {
+    	@Override
+    	public void actionPerformed(final ActionEvent e){
+    		
+    		if(inputLesson.getText().equals("") == false && inputLesson.getText().equals(null) == false )
+    		{
+    			lessonName = inputLesson.getText();
+    		
+    			//System.out.println(lessonName);
+    		
+    			assignArrayValues();
+    		
+    			upNext.assignGP(nGracePeriod);
+            	upNext.assignNotes(nNotes);
+            	upNext.assignOcts(nOcts);
+            	upNext.assignType(nType);
+            	upNext.assignTimes(nTimes);
+            
+            	upNext.resetLesson();
+    			upNext.setNotes();
+    			upNext.repaint();
+            
+    			try {
+					addProperPanels(3);
+				} catch (LineUnavailableException | UnsupportedAudioFileException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+    		}
+    	}
+    };
    
     /*
-     * 	ActionListener to exit the program from the homepage
+     * 	ActionListener to select level
      */
     private ActionListener levelSelector = new ActionListener() {
     	@Override
     	public void actionPerformed(final ActionEvent e){
     		JButton x = (JButton) e.getSource();
     		
+    		
     		lessonName = x.getText();
+    		
     		
     		System.out.println(lessonName);
     		
@@ -443,7 +512,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     		upNext.assignGP(nGracePeriod);
             upNext.assignNotes(nNotes);
             upNext.assignOcts(nOcts);
-            upNext.assignRing(nRing);
+            upNext.assignType(nType);
             upNext.assignTimes(nTimes);
             
             upNext.resetLesson();
@@ -487,6 +556,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
      * 		2) Home Pressed
      * 		3) Classroom Pressed
 	 *		4) Levels Pressed
+	 *		5) Lesson Create Pressed
      */
     public void addProperPanels(int setting) throws LineUnavailableException, UnsupportedAudioFileException{
     	
@@ -517,6 +587,8 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     		
     		homeLoaded = false;
 			classLoaded = false;
+			createLesLoaded = false;
+			lessonSLoaded = false;
 			tunerLoaded = true;
 			
 			performTasks();
@@ -545,7 +617,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     			frame.add(homePage);
     		}
     		
-    		if(lessonSLoaded = true)
+    		if(lessonSLoaded == true)
     		{
     			lessonSelect.setVisible(false);
     			frame.remove(lessonSelect);
@@ -555,10 +627,21 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     			frame.add(homePage);
     		}
     		
+    		if(createLesLoaded == true){
+    			createLessonP.setVisible(false);
+    			frame.remove(createLessonP);
+    			
+    			homePage.setVisible(true);
+    			frame.setLayout(new GridLayout());
+    			frame.add(homePage);
+    		}
+    		
     		tunerLoaded = false;
     		classLoaded = false;
     		lessonSLoaded = false;
+    		createLesLoaded = false;
     		homeLoaded = true;
+    		
     	}
     	else if( setting == 3)
     	{
@@ -606,6 +689,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     		tunerLoaded = false;
     		homeLoaded = false;
     		lessonSLoaded = false;
+    		createLesLoaded = false;
     		classLoaded = true;
     		
     		performTasks();
@@ -634,7 +718,29 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     		tunerLoaded = false;
     		homeLoaded = false;
     		classLoaded = false;
+    		createLesLoaded = false;
     		lessonSLoaded = true;
+    		
+    	}
+    	else if(setting == 5)
+    	{
+    		if(homeLoaded == true)
+    		{
+    			homePage.setVisible(false);
+    			frame.remove(homePage);
+    			
+    			createLessonP.setVisible(true);
+    			frame.add(createLessonP);
+    			
+    			createPanel.initCreation();
+    			
+    		}
+    		
+    		tunerLoaded = false;
+    		homeLoaded = false;
+    		classLoaded = false;
+    		lessonSLoaded = false;
+    		createLesLoaded = true;
     		
     	}
 		
@@ -715,13 +821,16 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
          */
         loadTune = new JButton("Enter Tuner");					//set up tuner button
         loadTune.addActionListener(loadTuner);
-        tunerLoaded = false;
         loadTune.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT + HOME_BUTTON_OFFSET));
         
         loadStat = new JButton("View Stats");					//set up stat button
         loadStat.addActionListener(loadStats);
         loadStat.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT + HOME_BUTTON_OFFSET));
-        //statsLoaded = false;
+        
+        
+        loadLessonCreate = new JButton("Create Lesson");
+        loadLessonCreate.addActionListener(loadCreate);
+        loadLessonCreate.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT + HOME_BUTTON_OFFSET));
         
         loadLessonSelect = new JButton("Enter Classroom");
         loadLessonSelect.addActionListener(loadLessonSel);
@@ -743,13 +852,13 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
         
         homeLabel = new JLabel("ARTIFICIAL INSTRUCTOR");		//set up label for home page
         
-        BufferedImage homeLogo = ImageIO.read(new File("HomeLogo.jpg"));
+        BufferedImage homeLogo = ImageIO.read(new File("src/HomeLogo1.jpg"));
         homeLabel = new JLabel(new ImageIcon(homeLogo));
         
         homeButtons = new JPanel();
         homeButtons.setLayout(new GridLayout());
         homeButtons.add(loadTune);
-        homeButtons.add(loadStat);
+        homeButtons.add(loadLessonCreate);
         homeButtons.add(loadLessonSelect);
         //homeButtons.add(loadClass);
         homeButtons.add(closeProgram);
@@ -771,9 +880,10 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
          * 		through the output in textarea
          */
         lessonTextArea = new JTextArea();						//init textArea1
+        lessonTextArea.setLineWrap(true);
         lessonTextArea.setEditable(false);						//dont allow user to edit this
         Font font1 = lessonTextArea.getFont();					//get font, manipulate it, and set new font
-        float fSize = font1.getSize() + 10.0f ;
+        float fSize = font1.getSize() ;
         lessonTextArea.setFont(font1.deriveFont(fSize));
         sp = new JScrollPane(lessonTextArea);					//init sp, using textArea1 just created
         sp.setPreferredSize(new Dimension(200, 100));			//set the size of the scroll pane 
@@ -875,7 +985,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
          * 			>UpNextPanel
          */
         oPanel = new OscilloscopePanel();	// Init the panel to be used to show the soundwave of input
-        upNext = new UpNextPanel(nNotes, nRing, nTimes, nOcts, nGracePeriod);
+        upNext = new UpNextPanel(nNotes, nType, nTimes, nOcts, nGracePeriod);
         
         bottomP = new JPanel();
         bottomP.setLayout(new GridLayout(1, 2));
@@ -942,6 +1052,11 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
         lessonSelect = new JPanel();
         lessonSelect.setLayout(new GridLayout());
         
+        inputLesson = new JTextArea();
+        selectCustLesson = new JButton();
+        selectCustLesson.addActionListener(custLevelSelector);
+        selectCustLesson.setText("Select Entered Lesson");
+        
         lesson1 = new JButton();
         lesson1.addActionListener(levelSelector);
         lesson1.setText("lesson1");
@@ -966,6 +1081,8 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
         backHome.addActionListener(loadHome);
         backHome.setText("Return Home");
         
+        lessonSelect.add(inputLesson, BorderLayout.PAGE_START);
+        lessonSelect.add(selectCustLesson, BorderLayout.PAGE_START);
         lessonSelect.add(lesson1);
         lessonSelect.add(lesson2);
         lessonSelect.add(lesson3);
@@ -973,6 +1090,16 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
         lessonSelect.add(lesson5);
         lessonSelect.add(backHome);
         
+        createLessonP = new JPanel();
+        createLessonP.setLayout(new BorderLayout());
+        
+        createPanel = new createLessonPanel();
+        homeFromCreate = new JButton("Return Home");
+        homeFromCreate.setPreferredSize(new Dimension(100, 100));
+        homeFromCreate.addActionListener(cancelLessonCreation);
+        
+        createLessonP.add(createPanel, BorderLayout.CENTER);
+        createLessonP.add(homeFromCreate, BorderLayout.AFTER_LAST_LINE);
         
         /*
          * add homepage panel to frame
@@ -982,6 +1109,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
         classLoaded = false;
         tunerLoaded = false;
         lessonSLoaded = false;
+        createLesLoaded = false;
         //statsLoaded = false;
         
        
@@ -1153,15 +1281,33 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                     startTime = audioEvent.getTimeStamp();
                   //call the JSON parser
                     
-                    lessonOne = new FretLesson(startTime, nTimes, nNotes, nOcts, nRing, nGracePeriod);
+                    lessonOne = new FretLesson(startTime, nTimes, nNotes, nOcts, nType, nGracePeriod, BPM);
                    
                     upNext.assignGP(nGracePeriod);
                     upNext.assignNotes(nNotes);
                     upNext.assignOcts(nOcts);
-                    upNext.assignRing(nRing);
+                    upNext.assignType(nType);
                     upNext.assignTimes(nTimes);
                     
+                    uNotes = new String[1000];
+                    uNotes[0] = "NEW SET";
+                    
+                    uOcts = new int[1000];
+                    uOcts[0] = 1000;
+                    
+                    uTimes = new double[1000];
+                    uTimes[0] = 1000;
+                    
+                    uFreq = new double[1000];
+                    uFreq[0] = 1000;
+                    userAttemptCounter = 0;
+                    
                     fretBoardPlayer.setNoteDisplayMode(allNotesOn);
+                    
+                    if(line.isActive() == false)
+                    {
+                    	line.start();
+                    }
                 
                     /*
                     *   Initalize the upNext panel with correct information
@@ -1184,6 +1330,37 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                     */
                     if(lessonOne.getLessonPlace(audioEvent.getTimeStamp()) == true )
             		{
+                    	if(line.isActive() == true)
+                    	{
+                    		line.stop();
+                    	}
+                    	uNotes[userAttemptCounter] = "LAST";
+                    	boolean checkDone = false;
+                    	
+                    	if(uNotes[0].equals("NEW SET") == false){
+                        	for(int xxx = 0; xxx < uNotes.length; xxx++){
+                        		if(uNotes[xxx].equals("LAST") == true)
+                        		{
+                        			checkDone = true;
+                        			break;
+                        		}
+                        		
+                        		//lessonTextArea.append("/n");
+                        		//lessonTextArea.append("Note: " + uNotes[xxx], "\n Time: " + uTimes[xxx] + "\n Oct:" + uOcts[xxx]);
+                        		//System.out.println("Note "+ uNotes[xxx] );
+                        		//System.out.println("Oct "+ uOcts[xxx] );
+                        		//System.out.println("Time "+ uTimes[xxx] );
+                        		//System.out.println("Freq "+ uFreq[xxx] );
+                        		System.out.println(xxx );
+                        		
+                        		/*
+                        		 * Add Analyze data part here for lesson one
+                        		 */
+                        	}
+                        }//end if 
+                    	
+                    	lessonOne.produceFeedback(uNotes, uOcts, uTimes);
+                    	
             			startRecording = false;
             			startTime = -1;
             			lessonOne = null;
@@ -1191,6 +1368,10 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                         
             			upNext.lessonFinished();
                         upNext.resetLesson();
+                        
+                        line.stop();
+                        line.close();
+                        
             		}//end check for completion
             	}//end lesson check
                 
@@ -1238,6 +1419,9 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
             
             
             
+            
+             
+             
             /*
             *   Check for valid input from USER
             *       IF valid input(getPitch() != -1)
@@ -1248,19 +1432,20 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
             */
             if( pitchDetectionResult.getPitch() != -1)
             {
-                /*
-                *   set the values of PITCH and NOTE VALUE to the correct variables to be used
-                */
-                float pitch = pitchDetectionResult.getPitch();
-                String note = getNoteValue(pitch);
-           	
+                
+            	/*
+                 *   set the values of PITCH and NOTE VALUE to the correct variables to be used
+                 */
+                 float pitch = pitchDetectionResult.getPitch();
+                 String note = getNoteValue(pitch);
+                 
                 /*
                 *   Update the correct panel with the input information
                 *       PROCESS DATA IF user is currently playing a lesson
                 */
                 if(tunerLoaded == true)
                 {
-                    if (note.equals("COULD NOT RECOGNIZE INPUT") == false || note.equals("NO INPUT") == false) 
+                    if (note.equals("COULD NOT RECOGNIZE INPUT") == false || note.equals("REST") == false) 
                     {
                         tunerTextArea.setText("");
                         tunerTextArea.setText("\n");
@@ -1285,44 +1470,51 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                     	{
                     		newNote = true;
                     	
+                    		
                     		/*
                     		 *   Update text area and upNext panel
                     		 */
-                    		lessonTextArea.append("SCORE " + lessonOne.getScore() + ")\n");
+                    		//lessonTextArea.append("SCORE " + lessonOne.getScore() + ")\n");
                     		lessonTextArea.setCaretPosition(lessonTextArea.getDocument().getLength());
                         
-                    		/*
-                    		 *   Update the upNext Panel with the current counter and lesson color
-                    		 */
-                    		upNext.setCounter(lessonOne.getLesCounter());
-                    		upNext.setDotColor(lessonOne.getNoteColor());
-                    		upNext.setTimeUntil(audioEvent.getTimeStamp(), startTime);
-                    		upNext.repaint();
-                        
-                    		/*
-                    		 *   Update the lesson object using current time and check for accuracy
-                    		 *   Update the fretBoardPlayer with the current Lesson information
-                    		 */
+                    		uNotes[userAttemptCounter] = note;
+                    		uOcts[userAttemptCounter] = octave;
+                    		uTimes[userAttemptCounter] = audioEvent.getTimeStamp();
+                    		uFreq[userAttemptCounter] = pitch;
+                    		userAttemptCounter++;
                     		
-                    		lessonOne.incrementCnt(audioEvent.getTimeStamp());
-                    		lessonOne.checkNoteAccuracy(audioEvent.getTimeStamp(), note, octave);
-                    		fretBoardPlayer.setNoteDisplayMode(allNotesOn);
-                    		fretBoardPlayer.setLesNoteVal(lessonOne.getNoteValue());
-                    		fretBoardPlayer.setLesOctave(lessonOne.getNoteOct());
-                    		fretBoardPlayer.setLesRing(lessonOne.getNoteRing());
-                    		fretBoardPlayer.setLesColor(lessonOne.getNoteColor());
-                    		fretBoardPlayer.repaint(); 
-                        
-                    		/*
-                    		 *   Update the fretBoardPlayer with the User input
-                    		 *   Repaint to reflect changes
-                    		 */
-                    		fretBoardPlayer.setNoteDisplayMode(allNotesOn);
-                    		fretBoardPlayer.setNoteVal(note);
-                    		fretBoardPlayer.setOctave(octave);
-                    		fretBoardPlayer.repaint();
-                    	
                     	}//end newNote == false
+                    	
+                    	/*
+                		 *   Update the upNext Panel with the current counter and lesson color
+                		 */
+                		upNext.setCounter(lessonOne.getLesCounter());
+                		upNext.setDotColor(lessonOne.getNoteColor());
+                		upNext.setTimeUntil(audioEvent.getTimeStamp(), startTime);
+                		upNext.repaint();
+                    
+                		/*
+                		 *   Update the lesson object using current time and check for accuracy
+                		 *   Update the fretBoardPlayer with the current Lesson information
+                		 */
+                		
+                		lessonOne.incrementCnt(audioEvent.getTimeStamp());
+  //              		lessonOne.checkNoteAccuracy(audioEvent.getTimeStamp(), note, octave);
+                		fretBoardPlayer.setNoteDisplayMode(allNotesOn);
+                		fretBoardPlayer.setLesNoteVal(lessonOne.getNoteValue());
+                		fretBoardPlayer.setLesOctave(lessonOne.getNoteOct());
+                		fretBoardPlayer.setLesType(lessonOne.getNoteType());
+                		fretBoardPlayer.setLesColor(lessonOne.getNoteColor());
+                		fretBoardPlayer.repaint(); 
+                    
+                		/*
+                		 *   Update the fretBoardPlayer with the User input
+                		 *   Repaint to reflect changes
+                		 */
+                		fretBoardPlayer.setNoteDisplayMode(allNotesOn);
+                		fretBoardPlayer.setNoteVal(note);
+                		fretBoardPlayer.setOctave(octave);
+                		fretBoardPlayer.repaint();
                     }
                     else
                     {
@@ -1334,6 +1526,8 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                         	lessonTextArea.append("RECORDING NOT IN PROGRESSS, PRESS START BUTTON\n");
                             userPrompt = true;
                         }
+                        
+                        
                         
                     }//end conditional for current state of attempt
                     
@@ -1359,23 +1553,34 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                         *   Check for accuracy
                         *   repaint fretBoardPlayer
                         */
-                    	int lastCnt = lessonOne.getLesCounter();
+                    	
                         lessonOne.incrementCnt(audioEvent.getTimeStamp());
                         fretBoardPlayer.setLesNoteVal(lessonOne.getNoteValue());
                         fretBoardPlayer.setLesOctave(lessonOne.getNoteOct());
-                        fretBoardPlayer.setLesRing(lessonOne.getNoteRing());
+                        fretBoardPlayer.setLesType(lessonOne.getNoteType());
                         fretBoardPlayer.setLesColor(lessonOne.getNoteColor());
                         fretBoardPlayer.repaint(); 
         		
-                        /*
-                         * Way to ensure that the user only deducts one point for missing a note 
-                         * 			with out playing an incorrect one
-                         */
-                        if(lastCnt != lessonOne.getLesCounter()){
-                        	lessonOne.checkNoteAccuracy(audioEvent.getTimeStamp(), "NO INPUT", -1);
+                       
+                        if(userAttemptCounter != 0){
+                        	if(uNotes[userAttemptCounter - 1].equals("REST") == false && uTimes[userAttemptCounter - 1] + 0.02 < audioEvent.getTimeStamp()){
+                        		/*
+                                 * Way to ensure that the user isnt constanly losing points for same rest value
+                                 */
+       //                         lessonOne.checkNoteAccuracy(audioEvent.getTimeStamp(), "REST", -1);
+                                
+                        		/*
+                        		 * Store the user attempt info, to show nothing was played when they were supposed to
+                        		 */
+                        		uNotes[userAttemptCounter] = "REST";
+                        		uOcts[userAttemptCounter] = 1;
+                        		uTimes[userAttemptCounter] = audioEvent.getTimeStamp();
+                        		uFreq[userAttemptCounter] = -1;
+                        		userAttemptCounter++;
+                        	}
                         }
                         
-                        
+                      
                         /*
                         *   Update the upNext panel with current information
                         */
@@ -1384,6 +1589,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                         upNext.setDotColor(lessonOne.getNoteColor());
                         upNext.repaint();
                     }
+                    
                     
                 }//end page check
                 
@@ -1598,7 +1804,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
             }
             else if(pitch == -1)
             {
-            	note = "NO INPUT";
+            	note = "REST";
             }
             else 
             {
@@ -1616,10 +1822,13 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     	
     	try {
     		
-    		Object obj = parser.parse(new FileReader("/Users/Shawn/Desktop/"+lessonName+".json") );
+    		File f = new File("src/Lessons/"+ lessonName + ".json");
+    		//Object obj = parser.parse(new FileReader("/Users/Shawn/Desktop/Lessons/"+lessonName+".json") );
+    		Object obj = parser.parse(new FileReader( f) );
 
     		JSONObject jsonObject = (JSONObject) obj;
 
+    		
     		// loop array
     		JSONArray notes = (JSONArray) jsonObject.get("Notes");
     		Iterator<String> iterator = notes.iterator();
@@ -1628,12 +1837,11 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     		nNotes = new String[lenNUM];
     		nTimes = new double[lenNUM];
     		nOcts = new int[lenNUM];
-    		nRing = new boolean[lenNUM];
+    		nType = new String[lenNUM];
     		nGracePeriod = new double[lenNUM];
     		
     		while (iterator.hasNext()) {
     			nNotes[assignCnt] = iterator.next();
-    			System.out.println(nNotes[assignCnt]);
     			assignCnt++;
     		}
     		assignCnt = 0;
@@ -1661,12 +1869,10 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     			else if(temp.equals("2"))
     			{
     				nOcts[assignCnt] = 2;
-    				System.out.println("here");
     			}
     			else if(temp.equals("3"))
     			{
     				nOcts[assignCnt] = 3;
-    				System.out.println("here");
     			}
     			else 
     			{
@@ -1677,12 +1883,9 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     		}
     		assignCnt = 0;
     		
-    		
-    		JSONArray rings = (JSONArray) jsonObject.get("Ring");
-    		Iterator<Boolean> iteratorB = rings.iterator();
-    		while (iteratorB.hasNext()) {
-    			nRing[assignCnt] = iteratorB.next();
-    			
+    		JSONArray types = (JSONArray) jsonObject.get("Types");
+    		while (iterator.hasNext()) {
+    			nType[assignCnt] = iterator.next();
     			assignCnt++;
     		}
     		assignCnt = 0;
@@ -1695,6 +1898,8 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     		}
     		assignCnt = 0;
     		
+    		
+    		
     	} catch (FileNotFoundException e) {
     		e.printStackTrace();
     	} catch (IOException e) {
@@ -1705,6 +1910,5 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
     	
     }
 }//end ArtificalInstructor
-
 
 

@@ -119,8 +119,10 @@ public class FretBoardPanel extends JPanel {
     private int currentOctave = 0;					//octave value stored from input of player
     private String lNoteVal;						//note value stored from input of the lesson
     private int lOct;								//octave value stored from input of the lesson
-    private boolean lRing;
+    private String lType;
     private Color lesColor;
+    
+    private String lastNote = "";
     
     public FretBoardPanel() {
     		noteVal = "";
@@ -132,7 +134,9 @@ public class FretBoardPanel extends JPanel {
 
     public void setNoteVal(String note) {
         
-        noteVal = note;
+        lastNote = noteVal;
+    	noteVal = note;
+        
     }
 
     public void setNoteDisplayMode(boolean mode) {
@@ -325,6 +329,8 @@ public class FretBoardPanel extends JPanel {
         
         g.setColor(Color.BLACK);
         
+        
+       
         paintNotes(g);
         paintLessonNotes(g);
 
@@ -332,7 +338,7 @@ public class FretBoardPanel extends JPanel {
 
     public void paintNotes(Graphics g) {
 
-            if (displayAllNotes == true) {
+            if (displayAllNotes == true && noteVal.equals(null) == false) {
 
                 if (noteVal.equals("A")) {
                     //add dot to mark note
@@ -733,7 +739,7 @@ public class FretBoardPanel extends JPanel {
             	}
             	else if(currentOctave == 2)
             	{
-                    if (noteVal.equals("A") ) {
+            		 if (noteVal.equals("A") ) {
                         //add dot to mark note
                         g.setColor(Color.RED);
                         g.fillOval(DOTWIDTH7, DOTHEIGHT1, DOT_RADIUS, DOT_RADIUS);
@@ -1076,6 +1082,14 @@ public class FretBoardPanel extends JPanel {
                     }
             	}
             	*/
+            	else if(noteVal.equals("REST") == true)
+            	{
+            		g.setColor(Color.RED);
+            		g.fillOval(0, 0, 0, 0);
+            		
+            		g.setColor(Color.BLACK);
+            		g.drawString("", 0, 0);
+            	}
             }//end outer conditional
             
         } //end paintNotes
@@ -1091,8 +1105,8 @@ public class FretBoardPanel extends JPanel {
     	lOct = oct;
     }
     
-    public void setLesRing(boolean ring){
-    	lRing = ring;
+    public void setLesType(String type){
+    	lType = type;
     }
     
     public void setLesColor(boolean lColor){
@@ -1862,6 +1876,14 @@ public class FretBoardPanel extends JPanel {
                 }
         	}
         	*/
+        	else if(lNoteVal.equals("REST") == true)
+        	{
+        		g.setColor(lessonColor);
+        		g.fillOval(0, 0, 0, 0);
+        		
+        		g.setColor(Color.BLACK);
+        		g.drawString("", 0, 0);
+        	}
         }//end outer conditional
         
     } //end paintNotesForLesson
