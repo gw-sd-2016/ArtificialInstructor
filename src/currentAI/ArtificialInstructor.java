@@ -1,11 +1,3 @@
-/*
- * Shawn Huntzberry
- * 
- * The below code is a combination of my implementation of the JavaSound API and examples from the 
- * TarsoDSP library and examples. Not all the code below has been created by me, but the code I have used
- * I have noted the credit where it has come from. 
- * 
- */
 package currentAI;
 
 /*
@@ -852,7 +844,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
         
         homeLabel = new JLabel("ARTIFICIAL INSTRUCTOR");		//set up label for home page
         
-        BufferedImage homeLogo = ImageIO.read(new File("src/HomeLogo1.jpg"));
+        BufferedImage homeLogo = ImageIO.read(new File("src/HomeLogo.jpg"));
         homeLabel = new JLabel(new ImageIcon(homeLogo));
         
         homeButtons = new JPanel();
@@ -1337,6 +1329,7 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                     	uNotes[userAttemptCounter] = "LAST";
                     	boolean checkDone = false;
                     	
+                    	if(uNotes.equals(null) == false){
                     	if(uNotes[0].equals("NEW SET") == false){
                         	for(int xxx = 0; xxx < uNotes.length; xxx++){
                         		if(uNotes[xxx].equals("LAST") == true)
@@ -1347,19 +1340,25 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                         		
                         		//lessonTextArea.append("/n");
                         		//lessonTextArea.append("Note: " + uNotes[xxx], "\n Time: " + uTimes[xxx] + "\n Oct:" + uOcts[xxx]);
-                        		//System.out.println("Note "+ uNotes[xxx] );
+                        		System.out.println("Note "+ uNotes[xxx] );
                         		//System.out.println("Oct "+ uOcts[xxx] );
-                        		//System.out.println("Time "+ uTimes[xxx] );
+                        		System.out.println("Time "+ uTimes[xxx] );
                         		//System.out.println("Freq "+ uFreq[xxx] );
-                        		System.out.println(xxx );
+                        		//System.out.println(xxx );
                         		
                         		/*
                         		 * Add Analyze data part here for lesson one
                         		 */
                         	}
                         }//end if 
+                    	}//end check for null 
                     	
-                    	lessonOne.produceFeedback(uNotes, uOcts, uTimes);
+                    	try {
+							lessonOne.produceFeedback(uNotes, uOcts, uTimes);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
                     	
             			startRecording = false;
             			startTime = -1;
@@ -1465,25 +1464,53 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
                     */
                     if(startRecording == true)
                     {
+                    	if(userAttemptCounter >= 1 && userAttemptCounter < uNotes.length - 1 ){
+                    		
+                    		
+                    		if( (note.equals(uNotes[userAttemptCounter-1]) == true && octave == uOcts[userAttemptCounter-1] && (( audioEvent.getTimeStamp() - (uTimes[userAttemptCounter-1] - startTime) ) >= (BPM/60)*1/16 ) && uFreq[userAttemptCounter - 1] > pitch) 
+                    				|| (note.equals(uNotes[userAttemptCounter-1]) == true && octave != uOcts[userAttemptCounter-1] )
+                    					||  (note.equals(uNotes[userAttemptCounter-1]) == false)  
+                    						&& pitchDetectionResult.isPitched() == true )
+                    		{
+                    			newNote = true;
                     	
-                    	if(newNote == false)
+                    			lessonTextArea.append("ENTER "+ note + "---" + octave+ "---" + pitch + "\n");
+                    			lessonTextArea.setCaretPosition(lessonTextArea.getDocument().getLength());
+                    			
+                    		
+                    			/*
+                    		 	*   Update text area and upNext panel
+                    		 	*/
+                    		//	lessonTextArea.append("Note: " + note + "--- Freq: " + pitch + "\n");
+                    		//	lessonTextArea.setCaretPosition(lessonTextArea.getDocument().getLength());
+                        
+                    			uNotes[userAttemptCounter] = note;
+                    			uOcts[userAttemptCounter] = octave;
+                    			uTimes[userAttemptCounter] = audioEvent.getTimeStamp();
+                    			uFreq[userAttemptCounter] = pitch;
+                    			userAttemptCounter++;
+                    		
+                    		}//end newNote == false
+                    	}
+                    	else
                     	{
                     		newNote = true;
+                        	
+                    		
+                			/*
+                		 	*   Update text area and upNext panel
+                		 	*/
+                			lessonTextArea.append("Note: " + note + "--- Octave: " + octave + "\n");
+                			lessonTextArea.setCaretPosition(lessonTextArea.getDocument().getLength());
+                    
+                			uNotes[userAttemptCounter] = note;
+                			uOcts[userAttemptCounter] = octave;
+                			uTimes[userAttemptCounter] = audioEvent.getTimeStamp();
+                			uFreq[userAttemptCounter] = pitch;
+                			userAttemptCounter++;
+                    	}
+                    	//end if/else for storing input
                     	
-                    		
-                    		/*
-                    		 *   Update text area and upNext panel
-                    		 */
-                    		//lessonTextArea.append("SCORE " + lessonOne.getScore() + ")\n");
-                    		lessonTextArea.setCaretPosition(lessonTextArea.getDocument().getLength());
-                        
-                    		uNotes[userAttemptCounter] = note;
-                    		uOcts[userAttemptCounter] = octave;
-                    		uTimes[userAttemptCounter] = audioEvent.getTimeStamp();
-                    		uFreq[userAttemptCounter] = pitch;
-                    		userAttemptCounter++;
-                    		
-                    	}//end newNote == false
                     	
                     	/*
                 		 *   Update the upNext Panel with the current counter and lesson color
@@ -1563,12 +1590,17 @@ public class ArtificialInstructor extends JFrame implements PitchDetectionHandle
         		
                        
                         if(userAttemptCounter != 0){
-                        	if(uNotes[userAttemptCounter - 1].equals("REST") == false && uTimes[userAttemptCounter - 1] + 0.02 < audioEvent.getTimeStamp()){
+                        	if(uNotes[userAttemptCounter - 1].equals("REST") == false ||
+                        			uNotes[userAttemptCounter - 1].equals("REST") == true && ( audioEvent.getTimeStamp() - (uTimes[userAttemptCounter-1] - startTime) ) >= (BPM/60)){
                         		/*
                                  * Way to ensure that the user isnt constanly losing points for same rest value
                                  */
        //                         lessonOne.checkNoteAccuracy(audioEvent.getTimeStamp(), "REST", -1);
                                 
+                        		lessonTextArea.append("Note: REST \n");
+                        		lessonTextArea.setCaretPosition(lessonTextArea.getDocument().getLength());
+                            
+                        		
                         		/*
                         		 * Store the user attempt info, to show nothing was played when they were supposed to
                         		 */
